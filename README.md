@@ -6,7 +6,7 @@
 
 ```
 chat/
-├── chat.sln              # Visual Studio 顶层解决方案（GateServer + StatusServer）
+├── chat.sln              # Visual Studio 顶层解决方案（GateServer + StatusServer + ChatServer）
 ├── client/               # Qt6 桌面客户端（登录 / 注册 / 找回密码）
 ├── server/
 │   ├── GateServer/       # C++ 网关服务：HTTP + gRPC，MySQL / Redis
@@ -34,9 +34,9 @@ cp config.ini.example config.ini   # 按需修改 GateServer 地址
 cmake -S . -B build && cmake --build build
 ```
 
-### GateServer / StatusServer（C++）
+### GateServer / StatusServer / ChatServer（C++）
 
-1. 用 Visual Studio 2022 打开根目录 `chat.sln`（或分别打开 `server/GateServer/GateServer.sln`、`server/StatusServer/StatusServer.sln`）
+1. 用 Visual Studio 2022 打开根目录 `chat.sln`，可在同一解决方案中看到 GateServer、StatusServer 和 ChatServer（也可分别打开各服务自己的 `.sln`）
 2. 每个服务目录下先把 `config.ini.example` 复制为 `config.ini` 并填入 MySQL / Redis 等配置
 3. 修改 `proto/message.proto` 后，运行 `scripts/generate_grpc.bat` 重新生成代码
 
