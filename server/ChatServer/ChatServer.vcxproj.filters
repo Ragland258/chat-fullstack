@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ioLoop">
+      <UniqueIdentifier>{14B7E1A7-7C7B-4B76-AC02-28B638FE64DB}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="handler">
+      <UniqueIdentifier>{D8C7474E-1A29-467B-AA82-3958ACC072DE}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="route">
+      <UniqueIdentifier>{8E2D0C6A-1B53-4F2D-9E5C-7B8A0E6F2D41}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="grpc">
+      <UniqueIdentifier>{A3F19B2C-4D67-4E8B-9A21-5C6D7E8F9A0B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="ioLoop\Connection.cpp">
+      <Filter>ioLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="const.h">
+      <Filter>头文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ioLoop\ConnectionMgr.cpp">
+      <Filter>ioLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="ioLoop\WebSocketServer.cpp">
+      <Filter>ioLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="IOSPool.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="route\LogicRoute.cpp">
+      <Filter>route</Filter>
+    </ClCompile>
+    <ClCompile Include="handler\soloChatHandler.cpp">
+      <Filter>handler</Filter>
+    </ClCompile>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="grpc\rpc.cpp">
+      <Filter>grpc</Filter>
+    </ClCompile>
+    <ClCompile Include="handler\RequestHandler.cpp">
+      <Filter>handler</Filter>
+    </ClCompile>
+    <ClCompile Include="handler\ErrorHandler.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ioLoop\Connection.h">
+      <Filter>ioLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ioLoop\ConnectionMgr.h">
+      <Filter>ioLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="IOSPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ioLoop\WebSocketServer.h">
+      <Filter>ioLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="route\LogicRoute.h">
+      <Filter>route</Filter>
+    </ClInclude>
+    <ClInclude Include="handler\RequestHandler.h">
+      <Filter>handler</Filter>
+    </ClInclude>
+    <ClInclude Include="handler\soloChatHandler.h">
+      <Filter>handler</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="grpc\rpc.h">
+      <Filter>grpc</Filter>
+    </ClInclude>
+    <ClInclude Include="ThreadPool.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="handler\ErrorHandler.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="ChatServer.rc">
+      <Filter>资源文件</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>
