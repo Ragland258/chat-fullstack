@@ -1,6 +1,7 @@
 #include "LogicRoute.h"
 
 #include "ioLoop/Connection.h"
+#include "handler/ErrorHandler.h"
 #include "handler/RequestHandler.h"
 #include "handler/soloChatHandler.h"
 
@@ -22,85 +23,90 @@ void LogicRoute::RegisterHandler(const std::string& message_type, std::unique_pt
 
 bool LogicRoute::HandlerPost(const std::string& json, std::shared_ptr<Connection> connection)
 {
-	/** ÏûÏ¢¸ñÊ½:
+	/** æ¶ˆæ¯æ ¼å¼:
 	* uid
 	* token
 	* messageType
 	* data 
 	*
 	*/
+	auto dispatch_error =
+		[this, &connection](const std::string& message)
+		{
+			auto error_handler = handler_map_.find("error");
+			if (error_handler == handler_map_.end()
+				|| !error_handler->second
+				|| !connection)
+			{
+				return false;
+			}
+
+			Json::Value error_data;
+			error_data["message"] = message;
+			error_handler->second->Handler(
+				error_data,
+				connection
+			);
+			return false;
+		};
+
+	if (!connection)
+	{
+		return false;
+	}
+
 	try
 	{
-		// ´¦ÀíÏûÏ¢json
+		// å¤„ç†æ¶ˆæ¯json
 		Json::Reader reader;
 		Json::Value src_root;
 		auto parse_success = reader.parse(json, src_root);
 		if (!parse_success
 			|| !src_root.isObject())
 		{
-			handler_map_["error"]->Handler(
-				"JsonError",
-				std::move(connection)
-			);
+			return dispatch_error("JsonError");
 		}
-		else // ¼ì²âtype´æÔÚ
+
+		// æ£€æµ‹ require æ˜¯å¦å­˜åœ¨ä¸”ä¸ºå­—ç¬¦ä¸²ã€‚
+		if (!src_root.isMember("require")
+			|| !src_root["require"].isString())
 		{
-			/** ÏûÏ¢¸ñÊ½:
-			* uid
-			* token
-			* require
-			* data
-			*/
-			if (!src_root.isMember("require")
-				|| !src_root["require"].isNull())
-			{
-				handler_map_["error"]->Handler(
-					"JsonError",
-					std::move(connection)
-				);
-				std::cerr << "[LogicRoute]: json no mumber named require\n";
-			}
-			else // type´æÔÚ
-			{
-				auto require = src_root["require"].asString();
-
-				auto it = handler_map_.find(require);
-
-				if (it == handler_map_.end()) // ĞèÒªµÄrequire²»´æÔÚ
-				{
-					handler_map_["error"]->Handler(
-						"ErrorRequire",
-						std::move(connection)
-					);
-					std::cerr << "[LogicRoute]: require failed\n";
-				}
-				else
-				{
-					it->second->Handler(
-						std::move(json),
-						std::move(connection)
-					);
-				}
-			}
+			std::cerr << "[LogicRoute]: json has no string member named require\n";
+			return dispatch_error("JsonError");
 		}
 
-	}
-	catch (std::exception& ec)
-	{
+		auto require = src_root["require"].asString();
+		auto handler = handler_map_.find(require);
+		if (handler == handler_map_.end() || !handler->second)
+		{
+			std::cerr << "[LogicRoute]: require failed\n";
+			return dispatch_error("ErrorRequire");
+		}
 
+		handler->second->Handler(
+			src_root,
+			connection
+		);
+		return true;
+	}
+	catch (const std::exception& exception)
+	{
+		std::cerr << "[LogicRoute]: exception: " << exception.what() << '\n';
+		return dispatch_error("InternalError");
 	}
 }
 
 LogicRoute::LogicRoute()
 {
-	// µ¥ÁÄ
+	// å•èŠ
 	RegisterHandler(
 		"soloChat",
 		std::make_unique<soloChatHandler>()
 	);
 
-	// ´íÎó´¦Àí
+	// é”™è¯¯å¤„ç†
 	RegisterHandler(
-		"error"
-	)
+		"error",
+		std::make_unique<ErrorHandler>()
+	);
 }

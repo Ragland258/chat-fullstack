@@ -24,6 +24,8 @@ private:
 	std::vector<WorkPtr> works_;
 	std::vector<std::thread> threads_;
 	std::size_t nextIOS_;
+	std::mutex stop_mutex_;
+	bool stopped_ = false;
 
 };
 

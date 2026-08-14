@@ -18,4 +18,5 @@
 - 已检查待提交文件清单。
 - 已扫描密码、密钥、Token 值及本地配置文件，未发现需要提交的敏感配置。
 - 已使用 Visual Studio 2022 MSBuild 执行 `Debug|x64` 构建。
-- 当前构建未通过：`const.h` 存在 `ErrorCode` 重复定义，`LogicRoute` 的处理器注册代码不完整，`soloChatHandler` 的声明与实现不一致。上述问题来自迁移前的开发版本，本次仅迁移并如实记录，未扩大范围修改业务逻辑。
+- 迁移时发现的 `ErrorCode` 重复定义、路由注册不完整及 Handler 签名不一致问题已在后续修复中解决。
+- 当前 `Debug|x64` 和 `Release|x64` 完整重建结果均为 0 个警告、0 个错误；WebSocket 客户端连接、非法 JSON 请求、未知路由及错误响应链验证通过。

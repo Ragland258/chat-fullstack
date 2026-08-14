@@ -14,12 +14,12 @@ public:
 	LogicRoute(const LogicRoute&) = delete;
 	LogicRoute& operator=(const LogicRoute&) = delete;
 
-	// 注册路由
+	// 娉ㄥ唽璺敱
 	void RegisterHandler(
 		const std::string& message_type,
 		std::unique_ptr<RequestHandler> handler);
 	
-	// 分发路由
+	// 鍒嗗彂璺敱
 	bool HandlerPost(
 		const std::string& json,
 		std::shared_ptr<Connection> connection

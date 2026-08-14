@@ -36,7 +36,7 @@ void WebSocketServer::StartAccept()
 			}
 
 			// 把StartAccept挪到try外面，无论是否异常，只要不是operation_aborted都继续监听
-			if (!err || err != boost::asio::error::operation_aborted)
+			if (err != boost::asio::error::operation_aborted)
 			{
 				StartAccept();
 			}

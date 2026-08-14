@@ -30,4 +30,4 @@ ChatServer/
 
 当前版本处于开发阶段，WebSocket 通信主链路已建立；身份校验、Redis/MySQL 持久化、与 StatusServer 的联动及完整业务协议仍待接入。
 
-当前迁移版本的 `Debug|x64` 构建尚未通过，已知问题包括 `const.h` 中 `ErrorCode` 重复定义、`LogicRoute` 处理器注册代码不完整，以及 `soloChatHandler` 声明与实现不一致。
+当前迁移版本已通过 Visual Studio 2022 的 `Debug|x64` 和 `Release|x64` 完整重建（0 个警告、0 个错误），并完成 `ws://127.0.0.1:7891` 连接与错误响应冒烟测试。

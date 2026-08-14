@@ -1,8 +1,9 @@
+#pragma once
+
 #include <iostream>
 
 #include <boost/beast.hpp>
 #include <boost/asio.hpp>
-#include <boost/asio/ssl.hpp>
 #include <boost/uuid/basic_random_generator.hpp>
 #include <boost/uuid.hpp>
 #include <boost/uuid/uuid_generators.hpp>
@@ -32,11 +33,11 @@ namespace beast = boost::beast;
 
 enum class ErrorCode
 {
-	// 消息解码错误
+	// 娑堟伅瑙ｇ爜閿欒
 	Message_Json_error = 1001,
 	Messgae_Parse_Timeout = 1002,
 
-	// 消息处理错误
+	// 娑堟伅澶勭悊閿欒
 	Handler_Timeout = 2001,
 	Send_Error = 2002,
 

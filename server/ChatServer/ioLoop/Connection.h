@@ -6,10 +6,10 @@ namespace beast = boost::beast;
 
 struct UserInfo
 {
-	int uuid;		// ÓÃ»§id
-	string token; // µÇÂ¼×´Ì¬Ğ§Ñé
-	string Request_type;	//ÇëÇóÀàĞÍ:solo chat/group chat...,
-	string data;// data¿ÉÒÔÊÇjson¸ñÊ½
+	int uuid;		// ç”¨æˆ·id
+	string token; // ç™»å½•çŠ¶æ€æ•ˆéªŒ
+	string Request_type;	//è¯·æ±‚ç±»å‹:solo chat/group chat...,
+	string data;// dataå¯ä»¥æ˜¯jsonæ ¼å¼
 
 };
 
@@ -22,21 +22,21 @@ public:
 	asio::ip::tcp::socket& GetSocket();
 	void Start();
 
-	// websocketÎÕÊÖÉı¼¶
+	// websocketæ¡æ‰‹å‡çº§
 	void AsyncAccept();
 
-	// ·¢¸ø¿Í»§¶Ë
-	void SendResponse(string& send_json);
+	// å‘ç»™å®¢æˆ·ç«¯
+	void SendResponse(std::string send_json);
 
-	// ¹¹Ôì·¢ËÍ°ü
+	// æ„é€ å‘é€åŒ…
 	std::string
 		JsonResponse(
 			ErrorCode error,
 			const std::string& message,
-			const std::string& email = " ",
-			const std::string& token = " ",
-			const std::string& host = " ",
-			const std::string& port = " "
+			const std::string& email = "",
+			const std::string& token = "",
+			const std::string& host = "",
+			const std::string& port = ""
 		)
 	{
 		Json::Value root;
@@ -51,19 +51,20 @@ public:
 		if ( !port.empty() )
 			root[ "port" ] = port;
 
-		//ÈÃ×Ö½Ú±äµÃ½ô´Õ
+		//è®©å­—èŠ‚å˜å¾—ç´§å‡‘
 		Json::StreamWriterBuilder writer;
 		writer[ "indentation" ] = "";
 
 		return Json::writeString(writer, root);
 	}
 private:
-	unique_ptr<beast::websocket::stream<beast::tcp_stream>> ws_; // ¹ÜÀí WebSocket Á¬½ÓµÄÖÇÄÜÖ¸Õë
-	string uuid_; // Ã¿¸öÁ¬½ÓÎ¨Ò»µÄuuid
+	void AsyncWrite();
+
+	unique_ptr<beast::websocket::stream<beast::tcp_stream>> ws_; // ç®¡ç† WebSocket è¿æ¥çš„æ™ºèƒ½æŒ‡é’ˆ
+	string uuid_; // æ¯ä¸ªè¿æ¥å”¯ä¸€çš„uuid
 	asio::io_context& ioc_;
-	beast::flat_buffer recv_buff_; // ½ÓÊÕ»º³åÇø
+	beast::flat_buffer recv_buff_; // æ¥æ”¶ç¼“å†²åŒº
 	std::queue<string> send_queue_;
-	std::mutex mutex_;
 
 	string token_;
 };

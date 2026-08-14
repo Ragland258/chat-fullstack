@@ -5,7 +5,7 @@
 namespace
 {
 	/**
-	 * ½« Beast string_view ×ª³ÉÓµÓÐÄÚ´æµÄ std::string¡£
+	 * å°† Beast string_view è½¬æˆæ‹¥æœ‰å†…å­˜çš„ std::stringã€‚
 	 */
 	std::string BeastViewToString(
 		boost::beast::string_view view)
@@ -17,9 +17,9 @@ namespace
 	}
 
 	/**
-	 * ´Ó HTTP target ÖÐÌáÈ¡Â·ÓÉÂ·¾¶¡£
+	 * ä»Ž HTTP target ä¸­æå–è·¯ç”±è·¯å¾„ã€‚
 	 *
-	 * ÀýÈç£º
+	 * ä¾‹å¦‚ï¼š
 	 *
 	 * /get_verify
 	 *      -> /get_verify
@@ -70,7 +70,7 @@ namespace
 Connection::Connection(asio::io_context& ioc) 
 	: ioc_(ioc), ws_(std::make_unique < beast::websocket::stream<beast::tcp_stream>>(asio::make_strand(ioc)))
 {
-	// Éú³ÉÎ¨Ò»uuid
+	// ç”Ÿæˆå”¯ä¸€uuid
 	boost::uuids::random_generator generator;
 	boost::uuids::uuid uuid = generator();
 	uuid_ = boost::uuids::to_string(uuid);
@@ -83,15 +83,55 @@ string Connection::GetId()
 
 asio::ip::tcp::socket& Connection::GetSocket()
 {
-	// TODO: ÔÚ´Ë´¦²åÈë return Óï¾ä
 	return beast::get_lowest_layer(*ws_).socket();
+}
+
+void Connection::SendResponse(std::string send_json)
+{
+	auto self = shared_from_this();
+	asio::post(
+		ws_->get_executor(),
+		[self, message = std::move(send_json)]() mutable
+		{
+			const bool write_in_progress = !self->send_queue_.empty();
+			self->send_queue_.push(std::move(message));
+			if (!write_in_progress)
+			{
+				self->AsyncWrite();
+			}
+		}
+	);
+}
+
+void Connection::AsyncWrite()
+{
+	auto self = shared_from_this();
+	ws_->text(true);
+	ws_->async_write(
+		asio::buffer(send_queue_.front()),
+		[self](boost::system::error_code error, std::size_t)
+		{
+			if (error)
+			{
+				std::cerr << "websocket async write error is " << error.what() << std::endl;
+				ConnectionMgr::GetInstance()->RmvConnection(self->GetId());
+				return;
+			}
+
+			self->send_queue_.pop();
+			if (!self->send_queue_.empty())
+			{
+				self->AsyncWrite();
+			}
+		}
+	);
 }
 
 void Connection::Start()
 {
 	auto self = shared_from_this();
 	
-	// connectionÒì²½¶Á
+	// connectionå¼‚æ­¥è¯»
 	ws_->async_read(
 		recv_buff_,
 		[self](boost::system::error_code err,std::size_t trans_byte)
@@ -104,26 +144,26 @@ void Connection::Start()
 						ConnectionMgr::GetInstance()->RmvConnection(self->GetId());
 						return;
 					}
-					self->ws_->text(self->ws_->got_text()); // got_text()»ñÈ¡¶ÔÓ¦ÏûÏ¢¸ñÊ½ÀàÐÍ,Ò»¹²ÓÐÁ½ÖÖ
-					std::string recv_data = boost::beast::buffers_to_string(self->recv_buff_.data());// °ÑÏûÏ¢×ª»¯Îª×Ö½ÚÐÎÊ½
-					self->recv_buff_.consume(self->recv_buff_.size());// Çå¿Õ»º³åÇø
+					self->ws_->text(self->ws_->got_text()); // got_text()èŽ·å–å¯¹åº”æ¶ˆæ¯æ ¼å¼ç±»åž‹,ä¸€å…±æœ‰ä¸¤ç§
+					std::string recv_data = boost::beast::buffers_to_string(self->recv_buff_.data());// æŠŠæ¶ˆæ¯è½¬åŒ–ä¸ºå­—èŠ‚å½¢å¼
+					self->recv_buff_.consume(self->recv_buff_.size());// æ¸…ç©ºç¼“å†²åŒº
 					std::cout << "websocket receive msg is " << recv_data << std::endl;
 
 					/*
-					* LogicSystem Ö»¸ºÔðÑ°ÕÒ²¢µ÷ÓÃ Handler¡£
+					* LogicSystem åªè´Ÿè´£å¯»æ‰¾å¹¶è°ƒç”¨ Handlerã€‚
 					*	
-					* Handler ¸ºÔð£º
+					* Handler è´Ÿè´£ï¼š
 					*
-					* 1. ½âÎöÇëÇó;
-					* 2. Ö´ÐÐÒµÎñ£»
-					* 3. µ÷ÓÃ SendJsonResponse ·µ»Ø×îÖÕ½á¹û¡£
+					* 1. è§£æžè¯·æ±‚;
+					* 2. æ‰§è¡Œä¸šåŠ¡ï¼›
+					* 3. è°ƒç”¨ SendJsonResponse è¿”å›žæœ€ç»ˆç»“æžœã€‚
 					*/
 					LogicRoute::GetInstance()->HandlerPost(
 						std::move(recv_data), 
 						self
 					);
 
-					// µÝ¹é¼ÌÐø¼àÌý
+					// é€’å½’ç»§ç»­ç›‘å¬
 					self->Start();
 				}
 				catch ( std::exception& exp )
