@@ -30,9 +30,6 @@
     <ClCompile Include="ioLoop\Connection.cpp">
       <Filter>ioLoop</Filter>
     </ClCompile>
-    <ClCompile Include="const.h">
-      <Filter>头文件</Filter>
-    </ClCompile>
     <ClCompile Include="ioLoop\ConnectionMgr.cpp">
       <Filter>ioLoop</Filter>
     </ClCompile>
@@ -62,6 +59,9 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="const.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
     <ClInclude Include="ioLoop\Connection.h">
       <Filter>ioLoop</Filter>
     </ClInclude>
