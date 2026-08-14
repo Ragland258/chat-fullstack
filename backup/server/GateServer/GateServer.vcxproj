@@ -1,0 +1,211 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectGuid>{4b8a3e2d-7eed-4f22-9e9a-c208e0582122}</ProjectGuid>
+    <RootNamespace>chat</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <WholeProgramOptimization>false</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>D:\build\chat\$(Platform)\$(Configuration)\</OutDir>
+    <IntDir>D:\build\chat\obj\$(Platform)\$(Configuration)\</IntDir>
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)generated;D:\download\windows-redis\deps\hiredis;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4251;4267;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <WholeProgramOptimization>false</WholeProgramOptimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)generated;D:\download\windows-redis\deps\hiredis;D:\mysql-connector-c++-9.6.0-winx64\include;D:\mysql-connector-c++-9.6.0-winx64\include\jdbc;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4251;4267;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);D:\mysql-connector-c++-9.6.0-winx64\include;D:\mysql-connector-c++-9.6.0-winx64\include\jdbc;$(ProjectDir)generated;D:\download\windows-redis\deps\hiredis;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4251;4267;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <LinkIncremental>false</LinkIncremental>
+      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <AdditionalLibraryDirectories>D:\mysql-connector-c++-9.6.0-winx64\lib64\vs14;D:\download\windows-redis\msvs\hiredis\x64\Debug;D:\download\windows-redis\src\Win32_Interop\x64\Debug;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mysqlcppconn.lib;hiredis.lib;Win32_Interop.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>if exist "D:\mysql-connector-c++-9.6.0-winx64\lib64\mysqlcppconn-10-vs14.dll" copy /Y "D:\mysql-connector-c++-9.6.0-winx64\lib64\mysqlcppconn-10-vs14.dll" "$(OutDir)" &gt;nul
+if exist "$(ProjectDir)config.ini" copy /Y "$(ProjectDir)config.ini" "$(OutDir)config.ini" &gt;nul</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;_WIN32_WINNT=0x0601;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <AdditionalIncludeDirectories>$(ProjectDir);D:\mysql-connector-c++-9.6.0-winx64\include;D:\mysql-connector-c++-9.6.0-winx64\include\jdbc;$(ProjectDir)generated;D:\download\windows-redis\deps\hiredis;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <DisableSpecificWarnings>4996;4251;4267;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <LinkIncremental>false</LinkIncremental>
+      <AdditionalLibraryDirectories>D:\mysql-connector-c++-9.6.0-winx64\lib64\vs14;D:\download\windows-redis\msvs\hiredis\x64\Release;D:\download\windows-redis\src\Win32_Interop\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>mysqlcppconn.lib;hiredis.lib;Win32_Interop.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+    <PostBuildEvent>
+      <Command>if exist "D:\mysql-connector-c++-9.6.0-winx64\lib64\mysqlcppconn-10-vs14.dll" copy /Y "D:\mysql-connector-c++-9.6.0-winx64\lib64\mysqlcppconn-10-vs14.dll" "$(OutDir)" &gt;nul
+if exist "$(ProjectDir)config.ini" copy /Y "$(ProjectDir)config.ini" "$(OutDir)config.ini" &gt;nul</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="ConfigMgr.cpp" />
+    <ClCompile Include="IoLoop\HttpConnection.cpp" />
+    <ClCompile Include="IoLoop\IOSPool.cpp" />
+    <ClCompile Include="Work\Grpc\StatusGrpcClient.cpp" />
+    <ClCompile Include="Work\WorkHandler\LoginHandler.cpp" />
+    <ClCompile Include="Work\WorkHandler\ResetHandler.cpp" />
+    <ClCompile Include="Work\WorkRoute\LogicSystem.cpp" />
+    <ClCompile Include="generated\message.grpc.pb.cc" />
+    <ClCompile Include="generated\message.pb.cc" />
+    <ClCompile Include="gateServer_main.cpp" />
+    <ClCompile Include="Work\Mysql\MysqlDao.cpp" />
+    <ClCompile Include="Work\Mysql\MysqlMgr.cpp" />
+    <ClCompile Include="Work\WorkHandler\PasswordHasher.cpp" />
+    <ClCompile Include="Work\Redis\RedisMgr.cpp" />
+    <ClCompile Include="Work\WorkHandler\RegisterHandler.cpp" />
+    <ClCompile Include="IoLoop\Server.cpp" />
+    <ClCompile Include="Work\WorkHandler\VarifyHandler.cpp" />
+    <ClCompile Include="Work\Grpc\VerifyGrpcClient.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="ConfigMgr.h" />
+    <ClInclude Include="IoLoop\HttpConnection.h" />
+    <ClInclude Include="IoLoop\IOSPool.h" />
+    <ClInclude Include="Work\Grpc\RpcPool.h" />
+    <ClInclude Include="Work\Grpc\StatusGrpcClient.h" />
+    <ClInclude Include="Work\WorkHandler\LoginHandler.h" />
+    <ClInclude Include="Work\WorkHandler\ResetHandler.h" />
+    <ClInclude Include="Work\WorkRoute\LogicSystem.h" />
+    <ClInclude Include="generated\message.grpc.pb.h" />
+    <ClInclude Include="generated\message.pb.h" />
+    <ClInclude Include="Work\Mysql\MysqlDao.h" />
+    <ClInclude Include="Work\Mysql\MysqlMgr.h" />
+    <ClInclude Include="Work\WorkHandler\PasswordHasher.h" />
+    <ClInclude Include="Work\Redis\RedisMgr.h" />
+    <ClInclude Include="Work\WorkHandler\RegisterHandler.h" />
+    <ClInclude Include="Work\WorkHandler\RequestHandler.h" />
+    <ClInclude Include="IoLoop\Server.h" />
+    <ClInclude Include="const.h" />
+    <ClInclude Include="Singleton.h" />
+    <ClInclude Include="Work\ThreadPool.h" />
+    <ClInclude Include="Work\WorkHandler\VarifyHandler.h" />
+    <ClInclude Include="Work\Grpc\VerifyGrpcClient.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.ini" />
+    <None Include="..\..\scripts\consume_verify_code.lua" />
+    <None Include="..\..\scripts\generate_grpc.bat" />
+    <None Include="..\..\proto\message.proto" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

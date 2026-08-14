@@ -1,0 +1,34 @@
+[GateServer]
+Port = 9999
+
+[VarifyServer]
+Port = 50051
+Host = localhost
+PoolSize = 10
+
+[StatusServer]
+Port = 50052
+Host = localhost
+PoolSize = 10
+
+[RedisServer]
+Port = 6379
+Host = localhost
+password = replace_with_redis_password
+size = 10
+
+[Mysql]
+Host = replace_with_mysql_host
+Port = 3306
+PoolSize = 10
+User = replace_with_mysql_user
+Password = replace_with_mysql_password
+Schema = chat
+
+[ChatServer1]
+Host=127.0.0.1
+Port=9001
+
+[ChatServer2]
+Host=127.0.0.1
+Port=9002

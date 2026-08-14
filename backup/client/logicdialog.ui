@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>LogicDialog</class>
+ <widget class="QDialog" name="LogicDialog">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>1180</width><height>720</height></rect>
+  </property>
+  <property name="minimumSize">
+   <size><width>980</width><height>620</height></size>
+  </property>
+  <property name="windowTitle"><string>Chat · 会话</string></property>
+  <property name="styleSheet">
+   <string notr="true">#LogicDialog {
+    background: #f3f4f9;
+}
+#rootFrame {
+    background: #ffffff;
+    border: 1px solid #e7e9f2;
+    border-radius: 22px;
+}
+#sideBar {
+    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
+                                stop:0 #5f6ff2, stop:1 #7759e8);
+    border-top-left-radius: 22px;
+    border-bottom-left-radius: 22px;
+}
+#profileBadge {
+    min-width: 44px;
+    max-width: 44px;
+    min-height: 44px;
+    max-height: 44px;
+    border-radius: 15px;
+    background: rgba(255, 255, 255, 242);
+    color: #685de9;
+    font-size: 16px;
+    font-weight: 700;
+}
+#messageNav, #contactNav, #favoriteNav, #settingsNav {
+    min-width: 42px;
+    max-width: 42px;
+    min-height: 42px;
+    max-height: 42px;
+    border: none;
+    border-radius: 14px;
+    color: rgba(255, 255, 255, 199);
+    background: transparent;
+    font-size: 18px;
+}
+#messageNav {
+    color: #665be7;
+    background: rgba(255, 255, 255, 242);
+}
+#messageNav:hover, #contactNav:hover, #favoriteNav:hover, #settingsNav:hover {
+    color: #ffffff;
+    background: rgba(255, 255, 255, 43);
+}
+#conversationPanel {
+    background: #fbfbfe;
+    border-right: 1px solid #eceef4;
+}
+#conversationTitle {
+    color: #1f2435;
+    font-size: 22px;
+    font-weight: 700;
+}
+#addConversationButton {
+    min-width: 34px;
+    max-width: 34px;
+    min-height: 34px;
+    max-height: 34px;
+    border: 1px solid #e4e6ef;
+    border-radius: 11px;
+    color: #675de8;
+    background: #ffffff;
+    font-size: 18px;
+}
+#addConversationButton:hover {
+    background: #f3f1ff;
+    border-color: #d6d1ff;
+}
+#searchEdit {
+    min-height: 38px;
+    border: 1px solid #e7e9f1;
+    border-radius: 12px;
+    padding: 0 13px;
+    color: #33384a;
+    background: #f4f5f9;
+    font-size: 12px;
+}
+#searchEdit:focus {
+    border-color: #756bf0;
+    background: #ffffff;
+}
+#conversationScroll {
+    border: none;
+    background: transparent;
+}
+#conversationScrollWidget {
+    background: transparent;
+}
+#activeConversation {
+    background: #efefff;
+    border: 1px solid #e1defe;
+    border-radius: 15px;
+}
+#conversationTwo, #conversationThree, #conversationFour, #conversationFive {
+    background: transparent;
+    border: 1px solid transparent;
+    border-radius: 15px;
+}
+#conversationTwo:hover, #conversationThree:hover, #conversationFour:hover, #conversationFive:hover {
+    background: #f4f5fa;
+}
+#avatarOne, #avatarTwo, #avatarThree, #avatarFour, #avatarFive, #chatAvatar, #messageAvatarOne, #messageAvatarTwo {
+    min-width: 42px;
+    max-width: 42px;
+    min-height: 42px;
+    max-height: 42px;
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: 13px;
+    font-weight: 700;
+}
+#avatarOne, #chatAvatar, #messageAvatarOne { background: #7569ef; }
+#avatarTwo { background: #4ba9e8; }
+#avatarThree { background: #f49a58; }
+#avatarFour { background: #49b88c; }
+#avatarFive { background: #dc6f95; }
+#messageAvatarTwo { background: #4ba9e8; }
+#conversationNameOne, #conversationNameTwo, #conversationNameThree, #conversationNameFour, #conversationNameFive {
+    color: #292e3e;
+    font-size: 13px;
+    font-weight: 600;
+}
+#conversationPreviewOne, #conversationPreviewTwo, #conversationPreviewThree, #conversationPreviewFour, #conversationPreviewFive,
+#conversationTimeOne, #conversationTimeTwo, #conversationTimeThree, #conversationTimeFour, #conversationTimeFive {
+    color: #969daf;
+    font-size: 10px;
+}
+#unreadBadge {
+    min-width: 18px;
+    max-width: 18px;
+    min-height: 18px;
+    max-height: 18px;
+    border-radius: 9px;
+    background: #6e63e9;
+    color: #ffffff;
+    font-size: 9px;
+    font-weight: 700;
+}
+#chatPanel {
+    background: #ffffff;
+    border-top-right-radius: 22px;
+    border-bottom-right-radius: 22px;
+}
+#chatHeader {
+    background: #ffffff;
+    border-bottom: 1px solid #eceef4;
+    border-top-right-radius: 22px;
+}
+#chatName {
+    color: #232838;
+    font-size: 15px;
+    font-weight: 700;
+}
+#chatStatus {
+    color: #36a875;
+    font-size: 10px;
+}
+#searchChatButton, #callButton, #videoButton, #moreButton {
+    min-width: 34px;
+    max-width: 34px;
+    min-height: 34px;
+    max-height: 34px;
+    border: none;
+    border-radius: 11px;
+    background: transparent;
+    color: #727a90;
+    font-size: 16px;
+}
+#searchChatButton:hover, #callButton:hover, #videoButton:hover, #moreButton:hover {
+    background: #f3f4f8;
+    color: #5f56da;
+}
+#messageScroll {
+    border: none;
+    background: #fafbfe;
+}
+#messageScrollWidget {
+    background: #fafbfe;
+}
+#dateLabel {
+    color: #a1a7b7;
+    font-size: 10px;
+}
+#incomingBubbleOne, #incomingBubbleTwo {
+    background: #ffffff;
+    border: 1px solid #eceef4;
+    border-radius: 15px;
+}
+#outgoingBubbleOne, #outgoingBubbleTwo {
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #5d7df5, stop:1 #8062e9);
+    border: none;
+    border-radius: 15px;
+}
+#incomingTextOne, #incomingTextTwo {
+    color: #303547;
+    font-size: 12px;
+}
+#outgoingTextOne, #outgoingTextTwo {
+    color: #ffffff;
+    font-size: 12px;
+}
+#incomingTimeOne, #incomingTimeTwo, #outgoingTimeOne, #outgoingTimeTwo {
+    color: #a3a9b8;
+    font-size: 9px;
+}
+#outgoingTimeOne, #outgoingTimeTwo {
+    color: #858ca0;
+}
+#composerFrame {
+    background: #ffffff;
+    border-top: 1px solid #eceef4;
+    border-bottom-right-radius: 22px;
+}
+#emojiButton, #imageButton, #fileButton {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    border: none;
+    border-radius: 10px;
+    background: transparent;
+    color: #7b8296;
+    font-size: 16px;
+}
+#emojiButton:hover, #imageButton:hover, #fileButton:hover {
+    background: #f2f3f8;
+    color: #6359df;
+}
+#messageEdit {
+    border: 1px solid #e5e8f0;
+    border-radius: 14px;
+    padding: 10px 12px;
+    background: #fafbfe;
+    color: #2d3244;
+    font-size: 12px;
+}
+#messageEdit:focus {
+    border-color: #766bf0;
+    background: #ffffff;
+}
+#sendButton {
+    min-width: 78px;
+    min-height: 40px;
+    border: none;
+    border-radius: 13px;
+    color: #ffffff;
+    font-size: 12px;
+    font-weight: 700;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #527af3, stop:1 #855ee8);
+}
+#sendButton:hover {
+    background: #665ae3;
+}</string>
+  </property>
+  <layout class="QVBoxLayout" name="dialogOuterLayout">
+   <property name="leftMargin"><number>18</number></property>
+   <property name="topMargin"><number>18</number></property>
+   <property name="rightMargin"><number>18</number></property>
+   <property name="bottomMargin"><number>18</number></property>
+   <item>
+    <widget class="QFrame" name="rootFrame">
+     <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+     <layout class="QHBoxLayout" name="rootLayout">
+      <property name="spacing"><number>0</number></property>
+      <property name="leftMargin"><number>0</number></property>
+      <property name="topMargin"><number>0</number></property>
+      <property name="rightMargin"><number>0</number></property>
+      <property name="bottomMargin"><number>0</number></property>
+      <item>
+       <widget class="QFrame" name="sideBar">
+        <property name="minimumSize"><size><width>74</width><height>0</height></size></property>
+        <property name="maximumSize"><size><width>74</width><height>16777215</height></size></property>
+        <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+        <layout class="QVBoxLayout" name="sideLayout">
+         <property name="spacing"><number>13</number></property>
+         <property name="leftMargin"><number>16</number></property>
+         <property name="topMargin"><number>22</number></property>
+         <property name="rightMargin"><number>16</number></property>
+         <property name="bottomMargin"><number>22</number></property>
+         <item alignment="Qt::AlignHCenter"><widget class="QLabel" name="profileBadge"><property name="text"><string>我</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+         <item><spacer name="sideTopSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="messageNav"><property name="text"><string>✦</string></property><property name="toolTip"><string>消息</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="contactNav"><property name="text"><string>◎</string></property><property name="toolTip"><string>联系人</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="favoriteNav"><property name="text"><string>☆</string></property><property name="toolTip"><string>收藏</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+         <item><spacer name="sideBottomSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>240</height></size></property></spacer></item>
+         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="settingsNav"><property name="text"><string>⚙</string></property><property name="toolTip"><string>设置</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="conversationPanel">
+        <property name="minimumSize"><size><width>292</width><height>0</height></size></property>
+        <property name="maximumSize"><size><width>320</width><height>16777215</height></size></property>
+        <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+        <layout class="QVBoxLayout" name="conversationPanelLayout">
+         <property name="spacing"><number>12</number></property>
+         <property name="leftMargin"><number>18</number></property>
+         <property name="topMargin"><number>22</number></property>
+         <property name="rightMargin"><number>18</number></property>
+         <property name="bottomMargin"><number>18</number></property>
+         <item>
+          <layout class="QHBoxLayout" name="conversationHeaderLayout">
+           <item><widget class="QLabel" name="conversationTitle"><property name="text"><string>消息</string></property></widget></item>
+           <item><spacer name="conversationHeaderSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+           <item><widget class="QPushButton" name="addConversationButton"><property name="text"><string>＋</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+          </layout>
+         </item>
+         <item><widget class="QLineEdit" name="searchEdit"><property name="placeholderText"><string>搜索联系人或消息</string></property><property name="clearButtonEnabled"><bool>true</bool></property></widget></item>
+         <item>
+          <widget class="QScrollArea" name="conversationScroll">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="conversationScrollWidget">
+            <property name="geometry"><rect><x>0</x><y>0</y><width>252</width><height>550</height></rect></property>
+            <layout class="QVBoxLayout" name="conversationListLayout">
+             <property name="spacing"><number>7</number></property>
+             <property name="leftMargin"><number>0</number></property><property name="topMargin"><number>0</number></property><property name="rightMargin"><number>0</number></property><property name="bottomMargin"><number>0</number></property>
+             <item>
+              <widget class="QFrame" name="activeConversation">
+               <property name="minimumSize"><size><width>0</width><height>70</height></size></property>
+               <layout class="QHBoxLayout" name="activeConversationLayout">
+                <property name="spacing"><number>11</number></property><property name="leftMargin"><number>11</number></property><property name="topMargin"><number>10</number></property><property name="rightMargin"><number>10</number></property><property name="bottomMargin"><number>10</number></property>
+                <item><widget class="QLabel" name="avatarOne"><property name="text"><string>李</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                <item>
+                 <layout class="QVBoxLayout" name="activeConversationTextLayout">
+                  <property name="spacing"><number>5</number></property>
+                  <item><widget class="QLabel" name="conversationNameOne"><property name="text"><string>李四</string></property></widget></item>
+                  <item><widget class="QLabel" name="conversationPreviewOne"><property name="text"><string>目前没有问题，明天给你看 demo</string></property><property name="textFormat"><enum>Qt::PlainText</enum></property></widget></item>
+                 </layout>
+                </item>
+                <item>
+                 <layout class="QVBoxLayout" name="activeConversationMetaLayout">
+                  <property name="spacing"><number>8</number></property>
+                  <item><widget class="QLabel" name="conversationTimeOne"><property name="text"><string>10:27</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property></widget></item>
+                  <item alignment="Qt::AlignRight"><widget class="QLabel" name="unreadBadge"><property name="text"><string>2</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                 </layout>
+                </item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="conversationTwo">
+               <property name="minimumSize"><size><width>0</width><height>66</height></size></property>
+               <layout class="QHBoxLayout" name="conversationTwoLayout"><property name="spacing"><number>11</number></property><property name="leftMargin"><number>11</number></property><property name="topMargin"><number>9</number></property><property name="rightMargin"><number>10</number></property><property name="bottomMargin"><number>9</number></property>
+                <item><widget class="QLabel" name="avatarTwo"><property name="text"><string>王</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                <item><layout class="QVBoxLayout" name="conversationTwoTextLayout"><property name="spacing"><number>5</number></property><item><widget class="QLabel" name="conversationNameTwo"><property name="text"><string>王五</string></property></widget></item><item><widget class="QLabel" name="conversationPreviewTwo"><property name="text"><string>好的，明天见！</string></property></widget></item></layout></item>
+                <item><widget class="QLabel" name="conversationTimeTwo"><property name="text"><string>昨天</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignTop</set></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="conversationThree">
+               <property name="minimumSize"><size><width>0</width><height>66</height></size></property>
+               <layout class="QHBoxLayout" name="conversationThreeLayout"><property name="spacing"><number>11</number></property><property name="leftMargin"><number>11</number></property><property name="topMargin"><number>9</number></property><property name="rightMargin"><number>10</number></property><property name="bottomMargin"><number>9</number></property>
+                <item><widget class="QLabel" name="avatarThree"><property name="text"><string>组</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                <item><layout class="QVBoxLayout" name="conversationThreeTextLayout"><property name="spacing"><number>5</number></property><item><widget class="QLabel" name="conversationNameThree"><property name="text"><string>项目组</string></property></widget></item><item><widget class="QLabel" name="conversationPreviewThree"><property name="text"><string>[文件] 项目需求文档.pdf</string></property></widget></item></layout></item>
+                <item><widget class="QLabel" name="conversationTimeThree"><property name="text"><string>昨天</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignTop</set></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="conversationFour">
+               <property name="minimumSize"><size><width>0</width><height>66</height></size></property>
+               <layout class="QHBoxLayout" name="conversationFourLayout"><property name="spacing"><number>11</number></property><property name="leftMargin"><number>11</number></property><property name="topMargin"><number>9</number></property><property name="rightMargin"><number>10</number></property><property name="bottomMargin"><number>9</number></property>
+                <item><widget class="QLabel" name="avatarFour"><property name="text"><string>赵</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                <item><layout class="QVBoxLayout" name="conversationFourTextLayout"><property name="spacing"><number>5</number></property><item><widget class="QLabel" name="conversationNameFour"><property name="text"><string>赵六</string></property></widget></item><item><widget class="QLabel" name="conversationPreviewFour"><property name="text"><string>加油 👍</string></property></widget></item></layout></item>
+                <item><widget class="QLabel" name="conversationTimeFour"><property name="text"><string>周一</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignTop</set></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item>
+              <widget class="QFrame" name="conversationFive">
+               <property name="minimumSize"><size><width>0</width><height>66</height></size></property>
+               <layout class="QHBoxLayout" name="conversationFiveLayout"><property name="spacing"><number>11</number></property><property name="leftMargin"><number>11</number></property><property name="topMargin"><number>9</number></property><property name="rightMargin"><number>10</number></property><property name="bottomMargin"><number>9</number></property>
+                <item><widget class="QLabel" name="avatarFive"><property name="text"><string>系</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+                <item><layout class="QVBoxLayout" name="conversationFiveTextLayout"><property name="spacing"><number>5</number></property><item><widget class="QLabel" name="conversationNameFive"><property name="text"><string>系统通知</string></property></widget></item><item><widget class="QLabel" name="conversationPreviewFive"><property name="text"><string>欢迎使用 Chat！</string></property></widget></item></layout></item>
+                <item><widget class="QLabel" name="conversationTimeFive"><property name="text"><string>周一</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignTop</set></property></widget></item>
+               </layout>
+              </widget>
+             </item>
+             <item><spacer name="conversationBottomSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>180</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+      <item>
+       <widget class="QFrame" name="chatPanel">
+        <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+        <layout class="QVBoxLayout" name="chatPanelLayout">
+         <property name="spacing"><number>0</number></property><property name="leftMargin"><number>0</number></property><property name="topMargin"><number>0</number></property><property name="rightMargin"><number>0</number></property><property name="bottomMargin"><number>0</number></property>
+         <item>
+          <widget class="QFrame" name="chatHeader">
+           <property name="minimumSize"><size><width>0</width><height>72</height></size></property>
+           <property name="maximumSize"><size><width>16777215</width><height>72</height></size></property>
+           <layout class="QHBoxLayout" name="chatHeaderLayout">
+            <property name="spacing"><number>11</number></property><property name="leftMargin"><number>22</number></property><property name="topMargin"><number>14</number></property><property name="rightMargin"><number>18</number></property><property name="bottomMargin"><number>14</number></property>
+            <item><widget class="QLabel" name="chatAvatar"><property name="text"><string>李</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+            <item><layout class="QVBoxLayout" name="chatNameLayout"><property name="spacing"><number>3</number></property><item><widget class="QLabel" name="chatName"><property name="text"><string>李四</string></property></widget></item><item><widget class="QLabel" name="chatStatus"><property name="text"><string>● 在线</string></property></widget></item></layout></item>
+            <item><spacer name="chatHeaderSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+            <item><widget class="QPushButton" name="searchChatButton"><property name="text"><string>⌕</string></property><property name="toolTip"><string>搜索聊天记录</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+            <item><widget class="QPushButton" name="callButton"><property name="text"><string>☎</string></property><property name="toolTip"><string>语音通话</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+            <item><widget class="QPushButton" name="videoButton"><property name="text"><string>▣</string></property><property name="toolTip"><string>视频通话</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+            <item><widget class="QPushButton" name="moreButton"><property name="text"><string>•••</string></property><property name="toolTip"><string>更多</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+           </layout>
+          </widget>
+         </item>
+         <item>
+          <widget class="QScrollArea" name="messageScroll">
+           <property name="widgetResizable"><bool>true</bool></property>
+           <property name="horizontalScrollBarPolicy"><enum>Qt::ScrollBarAlwaysOff</enum></property>
+           <widget class="QWidget" name="messageScrollWidget">
+            <property name="geometry"><rect><x>0</x><y>0</y><width>738</width><height>478</height></rect></property>
+            <layout class="QVBoxLayout" name="messageListLayout">
+             <property name="spacing"><number>14</number></property><property name="leftMargin"><number>24</number></property><property name="topMargin"><number>22</number></property><property name="rightMargin"><number>24</number></property><property name="bottomMargin"><number>22</number></property>
+             <item alignment="Qt::AlignHCenter"><widget class="QLabel" name="dateLabel"><property name="text"><string>今天 10:25</string></property></widget></item>
+             <item>
+              <layout class="QHBoxLayout" name="outgoingRowOne"><property name="spacing"><number>10</number></property><item><spacer name="outgoingSpacerOne"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>180</width><height>20</height></size></property></spacer></item><item><layout class="QVBoxLayout" name="outgoingMessageOneLayout"><property name="spacing"><number>4</number></property><item><widget class="QFrame" name="outgoingBubbleOne"><layout class="QVBoxLayout" name="outgoingBubbleOneLayout"><property name="leftMargin"><number>15</number></property><property name="topMargin"><number>11</number></property><property name="rightMargin"><number>15</number></property><property name="bottomMargin"><number>11</number></property><item><widget class="QLabel" name="outgoingTextOne"><property name="text"><string>在吗？最近项目进展如何？</string></property><property name="wordWrap"><bool>true</bool></property></widget></item></layout></widget></item><item><widget class="QLabel" name="outgoingTimeOne"><property name="text"><string>10:25  ·  已读</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property></widget></item></layout></item></layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="incomingRowOne"><property name="spacing"><number>10</number></property><item alignment="Qt::AlignTop"><widget class="QLabel" name="messageAvatarOne"><property name="text"><string>李</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item><item><layout class="QVBoxLayout" name="incomingMessageOneLayout"><property name="spacing"><number>4</number></property><item><widget class="QFrame" name="incomingBubbleOne"><layout class="QVBoxLayout" name="incomingBubbleOneLayout"><property name="leftMargin"><number>15</number></property><property name="topMargin"><number>11</number></property><property name="rightMargin"><number>15</number></property><property name="bottomMargin"><number>11</number></property><item><widget class="QLabel" name="incomingTextOne"><property name="text"><string>在的，进展顺利！</string></property><property name="wordWrap"><bool>true</bool></property></widget></item></layout></widget></item><item><widget class="QLabel" name="incomingTimeOne"><property name="text"><string>10:26</string></property></widget></item></layout></item><item><spacer name="incomingSpacerOne"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>220</width><height>20</height></size></property></spacer></item></layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="outgoingRowTwo"><property name="spacing"><number>10</number></property><item><spacer name="outgoingSpacerTwo"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>180</width><height>20</height></size></property></spacer></item><item><layout class="QVBoxLayout" name="outgoingMessageTwoLayout"><property name="spacing"><number>4</number></property><item><widget class="QFrame" name="outgoingBubbleTwo"><layout class="QVBoxLayout" name="outgoingBubbleTwoLayout"><property name="leftMargin"><number>15</number></property><property name="topMargin"><number>11</number></property><property name="rightMargin"><number>15</number></property><property name="bottomMargin"><number>11</number></property><item><widget class="QLabel" name="outgoingTextTwo"><property name="text"><string>有遇到什么问题吗？</string></property><property name="wordWrap"><bool>true</bool></property></widget></item></layout></widget></item><item><widget class="QLabel" name="outgoingTimeTwo"><property name="text"><string>10:26  ·  已读</string></property><property name="alignment"><set>Qt::AlignRight|Qt::AlignVCenter</set></property></widget></item></layout></item></layout>
+             </item>
+             <item>
+              <layout class="QHBoxLayout" name="incomingRowTwo"><property name="spacing"><number>10</number></property><item alignment="Qt::AlignTop"><widget class="QLabel" name="messageAvatarTwo"><property name="text"><string>李</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item><item><layout class="QVBoxLayout" name="incomingMessageTwoLayout"><property name="spacing"><number>4</number></property><item><widget class="QFrame" name="incomingBubbleTwo"><layout class="QVBoxLayout" name="incomingBubbleTwoLayout"><property name="leftMargin"><number>15</number></property><property name="topMargin"><number>11</number></property><property name="rightMargin"><number>15</number></property><property name="bottomMargin"><number>11</number></property><item><widget class="QLabel" name="incomingTextTwo"><property name="text"><string>目前没有问题，明天给你看 demo。</string></property><property name="wordWrap"><bool>true</bool></property></widget></item></layout></widget></item><item><widget class="QLabel" name="incomingTimeTwo"><property name="text"><string>10:27</string></property></widget></item></layout></item><item><spacer name="incomingSpacerTwo"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>180</width><height>20</height></size></property></spacer></item></layout>
+             </item>
+             <item><spacer name="messagesBottomSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>120</height></size></property></spacer></item>
+            </layout>
+           </widget>
+          </widget>
+         </item>
+         <item>
+          <widget class="QFrame" name="composerFrame">
+           <property name="minimumSize"><size><width>0</width><height>126</height></size></property>
+           <property name="maximumSize"><size><width>16777215</width><height>126</height></size></property>
+           <layout class="QVBoxLayout" name="composerLayout">
+            <property name="spacing"><number>8</number></property><property name="leftMargin"><number>20</number></property><property name="topMargin"><number>12</number></property><property name="rightMargin"><number>20</number></property><property name="bottomMargin"><number>14</number></property>
+            <item>
+             <layout class="QHBoxLayout" name="composerToolsLayout"><property name="spacing"><number>4</number></property><item><widget class="QPushButton" name="emojiButton"><property name="text"><string>☺</string></property><property name="toolTip"><string>表情</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item><item><widget class="QPushButton" name="imageButton"><property name="text"><string>▧</string></property><property name="toolTip"><string>图片</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item><item><widget class="QPushButton" name="fileButton"><property name="text"><string>⌑</string></property><property name="toolTip"><string>文件</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item><item><spacer name="composerToolsSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item></layout>
+            </item>
+            <item>
+             <layout class="QHBoxLayout" name="composerInputLayout"><property name="spacing"><number>12</number></property><item><widget class="QPlainTextEdit" name="messageEdit"><property name="placeholderText"><string>输入消息…</string></property><property name="maximumBlockCount"><number>8</number></property></widget></item><item alignment="Qt::AlignBottom"><widget class="QPushButton" name="sendButton"><property name="text"><string>发送  ↗</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item></layout>
+            </item>
+           </layout>
+          </widget>
+         </item>
+        </layout>
+       </widget>
+      </item>
+     </layout>
+    </widget>
+   </item>
+  </layout>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

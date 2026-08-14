@@ -1,11 +1,7 @@
 #pragma once
 
 #include "Singleton.h"
-
-#include <functional>
-#include <map>
-#include <memory>
-#include <string>
+#include "const.h"
 
 class HttpConnection;
 class RequestHandler;

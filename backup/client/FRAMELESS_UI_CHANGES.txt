@@ -1,0 +1,8 @@
+本版本只调整窗口外观与拖动行为：
+1. 去掉 Windows 系统标题栏和系统边框。
+2. 隐藏状态栏，但保留原有 statusBar() 消息调用。
+3. 去掉 shellFrame、QStackedWidget 和外层布局边框/空隙。
+4. 使用 titleBar 区域拖动窗口。
+5. 修复 QWidget* 传给 QFrame* 的编译错误。
+
+未修改：httpmgr.cpp/.h、registerpage.cpp/.h、请求字段、ReqID、信号槽及后端接口。

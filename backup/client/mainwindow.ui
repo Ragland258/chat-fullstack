@@ -1,0 +1,268 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect><x>0</x><y>0</y><width>420</width><height>650</height></rect>
+  </property>
+  <property name="minimumSize">
+   <size><width>420</width><height>650</height></size>
+  </property>
+  <property name="maximumSize">
+   <size><width>420</width><height>650</height></size>
+  </property>
+  <property name="windowTitle">
+   <string>Chat · 登录</string>
+  </property>
+  <property name="styleSheet">
+   <string notr="true">QMainWindow, QWidget#centralwidget {
+    background: transparent;
+    font-family: "Microsoft YaHei UI", "Microsoft YaHei", sans-serif;
+}
+QFrame#shellFrame {
+    border: none;
+    border-radius: 18px;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:1,
+                                stop:0 #ffffff,
+                                stop:0.56 #f8fbff,
+                                stop:1 #edf5ff);
+}
+QWidget#titleBar, QWidget#loginPanel {
+    border: none;
+    background: transparent;
+}
+QPushButton#closeButton {
+    min-width: 32px;
+    max-width: 32px;
+    min-height: 32px;
+    max-height: 32px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: #657184;
+    font-size: 21px;
+    font-weight: 300;
+}
+QPushButton#closeButton:hover {
+    color: #202735;
+    background: rgba(32, 39, 53, 18);
+}
+QLabel#avatarBadge {
+    min-width: 96px;
+    max-width: 96px;
+    min-height: 96px;
+    max-height: 96px;
+    border: 4px solid rgba(255, 255, 255, 245);
+    border-radius: 50px;
+    background: white;
+}
+QLineEdit#accountEdit, QLineEdit#passwordEdit {
+    min-height: 50px;
+    max-height: 50px;
+    border: 1px solid #d7e0ea;
+    border-radius: 12px;
+    padding-left: 18px;
+    padding-right: 18px;
+    background: rgba(255, 255, 255, 242);
+    color: #172033;
+    selection-background-color: #1687f8;
+    font-size: 16px;
+}
+QLineEdit#accountEdit:hover, QLineEdit#passwordEdit:hover {
+    border-color: #b9cce1;
+}
+QLineEdit#accountEdit:focus, QLineEdit#passwordEdit:focus {
+    border: 1px solid #278ef4;
+    background: white;
+}
+QCheckBox#rememberBox, QCheckBox#agreementBox {
+    spacing: 8px;
+    color: #667184;
+    font-size: 14px;
+}
+QCheckBox::indicator {
+    width: 18px;
+    height: 18px;
+    border: 1px solid #b8c4d2;
+    border-radius: 9px;
+    background: white;
+}
+QCheckBox::indicator:hover {
+    border-color: #1687f8;
+}
+QCheckBox::indicator:checked {
+    border-color: #1687f8;
+    background: #1687f8;
+    image: url(:/assets/check.png);
+}
+QPushButton#loginButton {
+    min-height: 52px;
+    max-height: 52px;
+    border: none;
+    border-radius: 12px;
+    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
+                                stop:0 #1687f8,
+                                stop:1 #0879ec);
+    color: white;
+    font-size: 20px;
+    font-weight: 500;
+}
+QPushButton#loginButton:hover {
+    background: #0878e7;
+}
+QPushButton#loginButton:pressed {
+    background: #0669cb;
+}
+QPushButton#forgotButton, QPushButton#registerButton {
+    min-height: 30px;
+    border: none;
+    background: transparent;
+    color: #1687f8;
+    font-size: 15px;
+}
+QPushButton#forgotButton:hover, QPushButton#registerButton:hover {
+    color: #0567c6;
+}
+QLabel#orLabel, QLabel#linkSeparator {
+    color: #a6b0bd;
+    font-size: 14px;
+}
+QLabel#dividerLeft, QLabel#dividerRight {
+    min-height: 1px;
+    max-height: 1px;
+    background: #dce3eb;
+}
+QStatusBar {
+    min-height: 24px;
+    max-height: 24px;
+    border: none;
+    background: transparent;
+    color: #7a8699;
+    font-size: 12px;
+    padding-left: 14px;
+}
+QStatusBar::item { border: none; }</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="outerLayout">
+    <property name="spacing"><number>0</number></property>
+    <property name="leftMargin"><number>0</number></property>
+    <property name="topMargin"><number>0</number></property>
+    <property name="rightMargin"><number>0</number></property>
+    <property name="bottomMargin"><number>0</number></property>
+    <item>
+     <widget class="QFrame" name="shellFrame">
+      <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+      <layout class="QVBoxLayout" name="shellLayout">
+       <property name="spacing"><number>0</number></property>
+       <property name="leftMargin"><number>0</number></property>
+       <property name="topMargin"><number>0</number></property>
+       <property name="rightMargin"><number>0</number></property>
+       <property name="bottomMargin"><number>0</number></property>
+       <item>
+        <widget class="QWidget" name="titleBar">
+         <property name="minimumSize"><size><width>0</width><height>48</height></size></property>
+         <property name="maximumSize"><size><width>16777215</width><height>48</height></size></property>
+         <layout class="QHBoxLayout" name="titleBarLayout">
+          <property name="spacing"><number>0</number></property>
+          <property name="leftMargin"><number>14</number></property>
+          <property name="topMargin"><number>7</number></property>
+          <property name="rightMargin"><number>8</number></property>
+          <property name="bottomMargin"><number>7</number></property>
+          <item><spacer name="titleBarSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+          <item><widget class="QPushButton" name="closeButton"><property name="text"><string>×</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+         </layout>
+        </widget>
+       </item>
+       <item>
+        <widget class="QWidget" name="loginPanel">
+         <layout class="QVBoxLayout" name="loginLayout">
+          <property name="spacing"><number>0</number></property>
+          <property name="leftMargin"><number>34</number></property>
+          <property name="topMargin"><number>0</number></property>
+          <property name="rightMargin"><number>34</number></property>
+          <property name="bottomMargin"><number>28</number></property>
+          <item alignment="Qt::AlignHCenter">
+           <widget class="QLabel" name="avatarBadge">
+            <property name="pixmap"><pixmap resource="resources.qrc">:/assets/avatar.png</pixmap></property>
+            <property name="scaledContents"><bool>true</bool></property>
+            <property name="alignment"><set>Qt::AlignCenter</set></property>
+           </widget>
+          </item>
+          <item><spacer name="avatarBottomSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>48</height></size></property></spacer></item>
+          <item><widget class="QLineEdit" name="accountEdit"><property name="placeholderText"><string>请输入邮箱账号</string></property><property name="clearButtonEnabled"><bool>true</bool></property></widget></item>
+          <item><spacer name="fieldSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>14</height></size></property></spacer></item>
+          <item><widget class="QLineEdit" name="passwordEdit"><property name="placeholderText"><string>请输入密码</string></property><property name="echoMode"><enum>QLineEdit::Password</enum></property><property name="clearButtonEnabled"><bool>true</bool></property></widget></item>
+          <item><spacer name="checkTopSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>16</height></size></property></spacer></item>
+          <item>
+           <layout class="QHBoxLayout" name="rememberLayout">
+            <property name="spacing"><number>0</number></property>
+            <item><spacer name="rememberLeftSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+            <item><widget class="QCheckBox" name="rememberBox"><property name="text"><string>记住密码</string></property></widget></item>
+           </layout>
+          </item>
+          <item><spacer name="loginTopSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>22</height></size></property></spacer></item>
+          <item><widget class="QPushButton" name="loginButton"><property name="text"><string>登录</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+          <item><spacer name="agreementTopSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>18</height></size></property></spacer></item>
+          <item><widget class="QCheckBox" name="agreementBox"><property name="text"><string>已阅读并同意服务协议和隐私保护指引</string></property></widget></item>
+          <item><spacer name="dividerTopSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
+          <item>
+           <layout class="QHBoxLayout" name="dividerLayout">
+            <property name="spacing"><number>12</number></property>
+            <item><widget class="QLabel" name="dividerLeft"><property name="text"><string/></property></widget></item>
+            <item><widget class="QLabel" name="orLabel"><property name="text"><string>或</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+            <item><widget class="QLabel" name="dividerRight"><property name="text"><string/></property></widget></item>
+           </layout>
+          </item>
+          <item><spacer name="linkTopSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>12</height></size></property></spacer></item>
+          <item>
+           <layout class="QHBoxLayout" name="linkLayout">
+            <property name="spacing"><number>8</number></property>
+            <item><spacer name="linkLeftSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+            <item><widget class="QPushButton" name="forgotButton"><property name="text"><string>忘记密码</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+            <item><widget class="QLabel" name="linkSeparator"><property name="text"><string>|</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
+            <item><widget class="QPushButton" name="registerButton"><property name="text"><string>注册账号</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+            <item><spacer name="linkRightSpacer"><property name="orientation"><enum>Qt::Horizontal</enum></property><property name="sizeHint" stdset="0"><size><width>40</width><height>20</height></size></property></spacer></item>
+           </layout>
+          </item>
+         </layout>
+        </widget>
+       </item>
+      </layout>
+      <widget class="QFrame" name="brandPanel">
+       <property name="visible"><bool>false</bool></property>
+       <property name="geometry"><rect><x>0</x><y>0</y><width>0</width><height>0</height></rect></property>
+       <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+      </widget>
+      <widget class="QFrame" name="featureCard">
+       <property name="visible"><bool>false</bool></property>
+       <property name="geometry"><rect><x>0</x><y>0</y><width>0</width><height>0</height></rect></property>
+       <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
+      </widget>
+      <widget class="QPushButton" name="scanButton">
+       <property name="visible"><bool>false</bool></property>
+       <property name="geometry"><rect><x>0</x><y>0</y><width>0</width><height>0</height></rect></property>
+       <property name="text"><string>扫码登录</string></property>
+      </widget>
+     </widget>
+    </item>
+   </layout>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+ </widget>
+ <resources>
+  <include location="resources.qrc"/>
+ </resources>
+ <connections>
+  <connection>
+   <sender>closeButton</sender>
+   <signal>clicked()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>close()</slot>
+   <hints>
+    <hint type="sourcelabel"><x>380</x><y>32</y></hint>
+    <hint type="destinationlabel"><x>210</x><y>325</y></hint>
+   </hints>
+  </connection>
+ </connections>
+</ui>

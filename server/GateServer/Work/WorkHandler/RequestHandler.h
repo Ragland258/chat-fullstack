@@ -28,7 +28,8 @@ public:
 protected:
 	RequestHandler() = default;
 
-    std::string BuildJsonResponse(
+    std::string 
+        JsonResponse(
         ErrorCode error,
         const std::string& message,
         const std::string& email = " ",

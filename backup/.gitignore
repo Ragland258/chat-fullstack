@@ -1,0 +1,51 @@
+# Visual Studio
+.vs/
+.vscode/
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+**/x64/
+**/x86/
+*.user
+*.suo
+*.VC.db
+*.VC.VC.opendb
+*.obj
+*.pdb
+*.ilk
+*.idb
+*.tlog
+*.log
+*.recipe
+*.lastbuildstate
+*.FileListAbsolute.txt
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+build/
+**/build/
+
+# Local secrets and runtime configuration
+config.ini
+server/*/config.json
+.env
+.env.*
+!.env.example
+
+# Backups and temporary files
+*.bak
+*.backup
+*.backup.*
+*.vcxproj.*-backup.*
+*.tmp
+*.temp
+*~
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini

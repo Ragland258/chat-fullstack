@@ -1,0 +1,44 @@
+# Build outputs
+build/
+build-*/
+cmake-build-*/
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+compile_commands.json
+
+# Qt Creator
+.qtcreator/
+*.pro.user
+*.pro.user.*
+*.user
+*.user.*
+*.autosave
+.qtc_clangd/
+
+# Generated Qt files
+moc_*.cpp
+ui_*.h
+qrc_*.cpp
+*.moc
+
+# Local tools and backups
+.agents/
+.codex_vs_props_test/
+backup/
+*.bak
+*.backup
+*.tmp
+*~
+
+# Local runtime configuration
+config.ini
+.env
+.env.*
+!.env.example
+
+# OS metadata
+.DS_Store
+Thumbs.db
+Desktop.ini
