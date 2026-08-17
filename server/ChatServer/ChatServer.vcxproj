@@ -154,7 +154,6 @@
     <ClInclude Include="grpc\rpc.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="ThreadPool.h" />
-    <ClInclude Include="handler\ErrorHandler.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConfigMgr.cpp" />
@@ -172,7 +171,6 @@
     <ClCompile Include="handler\soloChatHandler.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="grpc\rpc.cpp" />
-    <ClCompile Include="handler\ErrorHandler.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChatServer.rc" />

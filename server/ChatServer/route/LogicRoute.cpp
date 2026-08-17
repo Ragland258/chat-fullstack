@@ -4,7 +4,7 @@
 #include "handler/ErrorHandler.h"
 #include "handler/RequestHandler.h"
 #include "handler/soloChatHandler.h"
-
+#include "handler/SearchHandler.h"
 
 LogicRoute::~LogicRoute()
 {
@@ -108,5 +108,11 @@ LogicRoute::LogicRoute()
 	RegisterHandler(
 		"error",
 		std::make_unique<ErrorHandler>()
+	);
+
+	// 查找用户
+	RegisterHandler(
+		"searchUser",
+		std::make_unique<SearchHandler>()
 	);
 }

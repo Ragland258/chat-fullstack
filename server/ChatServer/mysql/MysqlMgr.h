@@ -13,6 +13,8 @@ public:
     MysqlMgr& operator=(const MysqlMgr&) = delete;
     ErrorCode RegisterUser(const std::string& name, const std::string& email, const std::string& pwd);
 	std::string GetPasswordHash(const std::string& email);
+
+    Json::Value GetUserInfo(std::uint64_t uid);
 private:
     MysqlMgr();
     MysqlDao  dao_;

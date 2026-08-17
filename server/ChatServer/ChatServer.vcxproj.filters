@@ -75,9 +75,6 @@
     <ClCompile Include="mysql\MysqlMgr.cpp">
       <Filter>mysql</Filter>
     </ClCompile>
-    <ClCompile Include="handler\ErrorHandler.cpp">
-      <Filter>handler</Filter>
-    </ClCompile>
     <ClCompile Include="ConfigMgr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
@@ -133,9 +130,6 @@
     </ClInclude>
     <ClInclude Include="mysql\MysqlDao.h">
       <Filter>mysql</Filter>
-    </ClInclude>
-    <ClInclude Include="handler\ErrorHandler.h">
-      <Filter>handler</Filter>
     </ClInclude>
     <ClInclude Include="ConfigMgr.h">
       <Filter>源文件</Filter>

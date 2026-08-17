@@ -49,3 +49,8 @@ std::string MysqlMgr::GetPasswordHash(const std::string& email)
         return {};
     }
 }
+
+Json::Value MysqlMgr::GetUserInfo(std::uint64_t uid)
+{
+    return Json::Value();
+}
