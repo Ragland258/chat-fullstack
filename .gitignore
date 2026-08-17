@@ -37,6 +37,7 @@ server/*/config.json
 !.env.example
 
 # Backups and temporary files
+backup/
 *.bak
 *.backup
 *.backup.*
