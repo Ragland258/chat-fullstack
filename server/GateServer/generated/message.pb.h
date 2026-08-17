@@ -644,6 +644,8 @@ class GetChatServerRsp final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kIpFieldNumber = 2,
+    kTokenFieldNumber = 4,
+    kServerIdFieldNumber = 5,
     kErrorFieldNumber = 1,
     kPortFieldNumber = 3,
   };
@@ -660,6 +662,36 @@ class GetChatServerRsp final : public ::google::protobuf::Message
   const ::std::string& _internal_ip() const;
   PROTOBUF_ALWAYS_INLINE void _internal_set_ip(const ::std::string& value);
   ::std::string* PROTOBUF_NONNULL _internal_mutable_ip();
+
+  public:
+  // string token = 4;
+  void clear_token() ;
+  const ::std::string& token() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_token(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_token();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_token();
+  void set_allocated_token(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_token() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_token(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_token();
+
+  public:
+  // string server_id = 5;
+  void clear_server_id() ;
+  const ::std::string& server_id() const;
+  template <typename Arg_ = const ::std::string&, typename... Args_>
+  void set_server_id(Arg_&& arg, Args_... args);
+  ::std::string* PROTOBUF_NONNULL mutable_server_id();
+  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_server_id();
+  void set_allocated_server_id(::std::string* PROTOBUF_NULLABLE value);
+
+  private:
+  const ::std::string& _internal_server_id() const;
+  PROTOBUF_ALWAYS_INLINE void _internal_set_server_id(const ::std::string& value);
+  ::std::string* PROTOBUF_NONNULL _internal_mutable_server_id();
 
   public:
   // int32 error = 1;
@@ -686,8 +718,8 @@ class GetChatServerRsp final : public ::google::protobuf::Message
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<2, 3,
-                                   0, 35,
+  static const ::google::protobuf::internal::TcParseTable<3, 5,
+                                   0, 49,
                                    2>
       _table_;
 
@@ -709,6 +741,8 @@ class GetChatServerRsp final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr ip_;
+    ::google::protobuf::internal::ArenaStringPtr token_;
+    ::google::protobuf::internal::ArenaStringPtr server_id_;
     ::int32_t error_;
     ::int32_t port_;
     PROTOBUF_TSAN_DECLARE_MEMBER
@@ -863,7 +897,8 @@ class GetChatServerReq final : public ::google::protobuf::Message
   // accessors -------------------------------------------------------
   enum : int {
     kEmailFieldNumber = 1,
-    kTokenFieldNumber = 2,
+    kUidFieldNumber = 3,
+    kDeviceIdFieldNumber = 4,
   };
   // string email = 1;
   void clear_email() ;
@@ -880,27 +915,32 @@ class GetChatServerReq final : public ::google::protobuf::Message
   ::std::string* PROTOBUF_NONNULL _internal_mutable_email();
 
   public:
-  // string token = 2;
-  void clear_token() ;
-  const ::std::string& token() const;
-  template <typename Arg_ = const ::std::string&, typename... Args_>
-  void set_token(Arg_&& arg, Args_... args);
-  ::std::string* PROTOBUF_NONNULL mutable_token();
-  [[nodiscard]] ::std::string* PROTOBUF_NULLABLE release_token();
-  void set_allocated_token(::std::string* PROTOBUF_NULLABLE value);
+  // uint64 uid = 3;
+  void clear_uid() ;
+  ::uint64_t uid() const;
+  void set_uid(::uint64_t value);
 
   private:
-  const ::std::string& _internal_token() const;
-  PROTOBUF_ALWAYS_INLINE void _internal_set_token(const ::std::string& value);
-  ::std::string* PROTOBUF_NONNULL _internal_mutable_token();
+  ::uint64_t _internal_uid() const;
+  void _internal_set_uid(::uint64_t value);
+
+  public:
+  // uint64 device_id = 4;
+  void clear_device_id() ;
+  ::uint64_t device_id() const;
+  void set_device_id(::uint64_t value);
+
+  private:
+  ::uint64_t _internal_device_id() const;
+  void _internal_set_device_id(::uint64_t value);
 
   public:
   // @@protoc_insertion_point(class_scope:message.GetChatServerReq)
  private:
   class _Internal;
   friend class ::google::protobuf::internal::TcParser;
-  static const ::google::protobuf::internal::TcParseTable<1, 2,
-                                   0, 43,
+  static const ::google::protobuf::internal::TcParseTable<2, 3,
+                                   0, 38,
                                    2>
       _table_;
 
@@ -922,7 +962,8 @@ class GetChatServerReq final : public ::google::protobuf::Message
     ::google::protobuf::internal::HasBits<1> _has_bits_;
     ::google::protobuf::internal::CachedSize _cached_size_;
     ::google::protobuf::internal::ArenaStringPtr email_;
-    ::google::protobuf::internal::ArenaStringPtr token_;
+    ::uint64_t uid_;
+    ::uint64_t device_id_;
     PROTOBUF_TSAN_DECLARE_MEMBER
   };
   union { Impl_ _impl_; };
@@ -1240,69 +1281,54 @@ inline void GetChatServerReq::set_allocated_email(::std::string* PROTOBUF_NULLAB
   // @@protoc_insertion_point(field_set_allocated:message.GetChatServerReq.email)
 }
 
-// string token = 2;
-inline void GetChatServerReq::clear_token() {
+// uint64 uid = 3;
+inline void GetChatServerReq::clear_uid() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.token_.ClearToEmpty();
+  _impl_.uid_ = ::uint64_t{0u};
   ClearHasBit(_impl_._has_bits_[0],
                   0x00000002U);
 }
-inline const ::std::string& GetChatServerReq::token() const
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  // @@protoc_insertion_point(field_get:message.GetChatServerReq.token)
-  return _internal_token();
+inline ::uint64_t GetChatServerReq::uid() const {
+  // @@protoc_insertion_point(field_get:message.GetChatServerReq.uid)
+  return _internal_uid();
 }
-template <typename Arg_, typename... Args_>
-PROTOBUF_ALWAYS_INLINE void GetChatServerReq::set_token(Arg_&& arg, Args_... args) {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
+inline void GetChatServerReq::set_uid(::uint64_t value) {
+  _internal_set_uid(value);
   SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  _impl_.token_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
-  // @@protoc_insertion_point(field_set:message.GetChatServerReq.token)
+  // @@protoc_insertion_point(field_set:message.GetChatServerReq.uid)
 }
-inline ::std::string* PROTOBUF_NONNULL GetChatServerReq::mutable_token()
-    ABSL_ATTRIBUTE_LIFETIME_BOUND {
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  ::std::string* _s = _internal_mutable_token();
-  // @@protoc_insertion_point(field_mutable:message.GetChatServerReq.token)
-  return _s;
-}
-inline const ::std::string& GetChatServerReq::_internal_token() const {
+inline ::uint64_t GetChatServerReq::_internal_uid() const {
   ::google::protobuf::internal::TSanRead(&_impl_);
-  return _impl_.token_.Get();
+  return _impl_.uid_;
 }
-inline void GetChatServerReq::_internal_set_token(const ::std::string& value) {
+inline void GetChatServerReq::_internal_set_uid(::uint64_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  _impl_.token_.Set(value, GetArena());
+  _impl_.uid_ = value;
 }
-inline ::std::string* PROTOBUF_NONNULL GetChatServerReq::_internal_mutable_token() {
+
+// uint64 device_id = 4;
+inline void GetChatServerReq::clear_device_id() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  return _impl_.token_.Mutable( GetArena());
+  _impl_.device_id_ = ::uint64_t{0u};
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
 }
-inline ::std::string* PROTOBUF_NULLABLE GetChatServerReq::release_token() {
-  ::google::protobuf::internal::TSanWrite(&_impl_);
-  // @@protoc_insertion_point(field_release:message.GetChatServerReq.token)
-  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000002U)) {
-    return nullptr;
-  }
-  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  auto* released = _impl_.token_.Release();
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
-    _impl_.token_.Set("", GetArena());
-  }
-  return released;
+inline ::uint64_t GetChatServerReq::device_id() const {
+  // @@protoc_insertion_point(field_get:message.GetChatServerReq.device_id)
+  return _internal_device_id();
 }
-inline void GetChatServerReq::set_allocated_token(::std::string* PROTOBUF_NULLABLE value) {
+inline void GetChatServerReq::set_device_id(::uint64_t value) {
+  _internal_set_device_id(value);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  // @@protoc_insertion_point(field_set:message.GetChatServerReq.device_id)
+}
+inline ::uint64_t GetChatServerReq::_internal_device_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.device_id_;
+}
+inline void GetChatServerReq::_internal_set_device_id(::uint64_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
-  if (value != nullptr) {
-    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
-  } else {
-    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
-  }
-  _impl_.token_.SetAllocated(value, GetArena());
-  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.token_.IsDefault()) {
-    _impl_.token_.Set("", GetArena());
-  }
-  // @@protoc_insertion_point(field_set_allocated:message.GetChatServerReq.token)
+  _impl_.device_id_ = value;
 }
 
 // -------------------------------------------------------------------
@@ -1314,7 +1340,7 @@ inline void GetChatServerRsp::clear_error() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.error_ = 0;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000002U);
+                  0x00000008U);
 }
 inline ::int32_t GetChatServerRsp::error() const {
   // @@protoc_insertion_point(field_get:message.GetChatServerRsp.error)
@@ -1322,7 +1348,7 @@ inline ::int32_t GetChatServerRsp::error() const {
 }
 inline void GetChatServerRsp::set_error(::int32_t value) {
   _internal_set_error(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000008U);
   // @@protoc_insertion_point(field_set:message.GetChatServerRsp.error)
 }
 inline ::int32_t GetChatServerRsp::_internal_error() const {
@@ -1404,7 +1430,7 @@ inline void GetChatServerRsp::clear_port() {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.port_ = 0;
   ClearHasBit(_impl_._has_bits_[0],
-                  0x00000004U);
+                  0x00000010U);
 }
 inline ::int32_t GetChatServerRsp::port() const {
   // @@protoc_insertion_point(field_get:message.GetChatServerRsp.port)
@@ -1412,7 +1438,7 @@ inline ::int32_t GetChatServerRsp::port() const {
 }
 inline void GetChatServerRsp::set_port(::int32_t value) {
   _internal_set_port(value);
-  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  SetHasBit(_impl_._has_bits_[0], 0x00000010U);
   // @@protoc_insertion_point(field_set:message.GetChatServerRsp.port)
 }
 inline ::int32_t GetChatServerRsp::_internal_port() const {
@@ -1422,6 +1448,136 @@ inline ::int32_t GetChatServerRsp::_internal_port() const {
 inline void GetChatServerRsp::_internal_set_port(::int32_t value) {
   ::google::protobuf::internal::TSanWrite(&_impl_);
   _impl_.port_ = value;
+}
+
+// string token = 4;
+inline void GetChatServerRsp::clear_token() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.token_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000002U);
+}
+inline const ::std::string& GetChatServerRsp::token() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:message.GetChatServerRsp.token)
+  return _internal_token();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void GetChatServerRsp::set_token(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  _impl_.token_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:message.GetChatServerRsp.token)
+}
+inline ::std::string* PROTOBUF_NONNULL GetChatServerRsp::mutable_token()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  ::std::string* _s = _internal_mutable_token();
+  // @@protoc_insertion_point(field_mutable:message.GetChatServerRsp.token)
+  return _s;
+}
+inline const ::std::string& GetChatServerRsp::_internal_token() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.token_.Get();
+}
+inline void GetChatServerRsp::_internal_set_token(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.token_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL GetChatServerRsp::_internal_mutable_token() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.token_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE GetChatServerRsp::release_token() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:message.GetChatServerRsp.token)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000002U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  auto* released = _impl_.token_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.token_.Set("", GetArena());
+  }
+  return released;
+}
+inline void GetChatServerRsp::set_allocated_token(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000002U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000002U);
+  }
+  _impl_.token_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.token_.IsDefault()) {
+    _impl_.token_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:message.GetChatServerRsp.token)
+}
+
+// string server_id = 5;
+inline void GetChatServerRsp::clear_server_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.server_id_.ClearToEmpty();
+  ClearHasBit(_impl_._has_bits_[0],
+                  0x00000004U);
+}
+inline const ::std::string& GetChatServerRsp::server_id() const
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  // @@protoc_insertion_point(field_get:message.GetChatServerRsp.server_id)
+  return _internal_server_id();
+}
+template <typename Arg_, typename... Args_>
+PROTOBUF_ALWAYS_INLINE void GetChatServerRsp::set_server_id(Arg_&& arg, Args_... args) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  _impl_.server_id_.Set(static_cast<Arg_&&>(arg), args..., GetArena());
+  // @@protoc_insertion_point(field_set:message.GetChatServerRsp.server_id)
+}
+inline ::std::string* PROTOBUF_NONNULL GetChatServerRsp::mutable_server_id()
+    ABSL_ATTRIBUTE_LIFETIME_BOUND {
+  SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  ::std::string* _s = _internal_mutable_server_id();
+  // @@protoc_insertion_point(field_mutable:message.GetChatServerRsp.server_id)
+  return _s;
+}
+inline const ::std::string& GetChatServerRsp::_internal_server_id() const {
+  ::google::protobuf::internal::TSanRead(&_impl_);
+  return _impl_.server_id_.Get();
+}
+inline void GetChatServerRsp::_internal_set_server_id(const ::std::string& value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  _impl_.server_id_.Set(value, GetArena());
+}
+inline ::std::string* PROTOBUF_NONNULL GetChatServerRsp::_internal_mutable_server_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  return _impl_.server_id_.Mutable( GetArena());
+}
+inline ::std::string* PROTOBUF_NULLABLE GetChatServerRsp::release_server_id() {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  // @@protoc_insertion_point(field_release:message.GetChatServerRsp.server_id)
+  if (!CheckHasBit(_impl_._has_bits_[0], 0x00000004U)) {
+    return nullptr;
+  }
+  ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  auto* released = _impl_.server_id_.Release();
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString()) {
+    _impl_.server_id_.Set("", GetArena());
+  }
+  return released;
+}
+inline void GetChatServerRsp::set_allocated_server_id(::std::string* PROTOBUF_NULLABLE value) {
+  ::google::protobuf::internal::TSanWrite(&_impl_);
+  if (value != nullptr) {
+    SetHasBit(_impl_._has_bits_[0], 0x00000004U);
+  } else {
+    ClearHasBit(_impl_._has_bits_[0], 0x00000004U);
+  }
+  _impl_.server_id_.SetAllocated(value, GetArena());
+  if (::google::protobuf::internal::DebugHardenForceCopyDefaultString() && _impl_.server_id_.IsDefault()) {
+    _impl_.server_id_.Set("", GetArena());
+  }
+  // @@protoc_insertion_point(field_set_allocated:message.GetChatServerRsp.server_id)
 }
 
 #ifdef __GNUC__

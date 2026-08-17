@@ -2,6 +2,7 @@
 
 #include "const.h"
 #include "Singleton.h"
+#include <cstdint>
 #include <hiredis.h>
 
 enum class VerifyCodeResult : int
@@ -159,16 +160,20 @@ public:
         const std::string& inputCode
     );
 
-    //创建token登录
-    std::string CreateLoginToken(
-        const std::string& email,
+    // 创建一条设备级登录会话，并为整个 Redis Hash 设置 TTL。
+    std::string CreateLoginSession(
+        std::uint64_t uid,
+        std::uint64_t deviceId,
+        const std::string& serverId,
         int expireSeconds = 30 * 60
     );
 
-    // 验证token
-    bool VerifyLoginToken(
-        const std::string& email,
-        const std::string& token
+    // 同时校验 uid、device_id、token 和 server_id。
+    bool VerifyLoginSession(
+        std::uint64_t uid,
+        std::uint64_t deviceId,
+        const std::string& token,
+        const std::string& serverId
 	);
 
 

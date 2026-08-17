@@ -19,6 +19,7 @@
 #include <QPixmap>
 #include <QRandomGenerator>
 #include <QRegularExpression>
+#include <QSettings>
 #include <QStackedWidget>
 #include <QStatusBar>
 
@@ -37,6 +38,29 @@ bool isValidEmail(const QString& text)
         );
 
     return emailRegex.match(text).hasMatch();
+}
+
+QString persistentDeviceId()
+{
+    QSettings settings(
+        QStringLiteral("Ragland"),
+        QStringLiteral("ChatClient"));
+
+    const QString stored =
+        settings.value(QStringLiteral("session/device_id")).toString();
+
+    bool ok = false;
+    const quint64 storedId = stored.toULongLong(&ok);
+    if (ok && storedId != 0)
+        return QString::number(storedId);
+
+    quint64 generatedId = 0;
+    while (generatedId == 0)
+        generatedId = QRandomGenerator::system()->generate64();
+
+    const QString result = QString::number(generatedId);
+    settings.setValue(QStringLiteral("session/device_id"), result);
+    return result;
 }
 
 
@@ -505,10 +529,11 @@ void MainWindow::on_login_btn_clicked()
     const QString email = ui->accountEdit->text().trimmed();
     const QString password = ui->passwordEdit->text();
 
-    // 当前 Gate Server 的登录接口是 POST /login，字段为 email/password。
+    // device_id 以十进制字符串发送，避免 JSON 浮点数损失 64 位精度。
     QJsonObject request;
     request[QStringLiteral("email")] = email;
     request[QStringLiteral("password")] = password;
+    request[QStringLiteral("device_id")] = persistentDeviceId();
 
     ui->loginButton->setEnabled(false);
     showLoginTip(QStringLiteral("正在登录，请稍候……"), true);
@@ -645,12 +670,6 @@ void MainWindow::showLoginTip(
 
 void MainWindow::enterLogicDialog(const QJsonObject& response)
 {
-    qDebug().noquote()
-    << "[login] response json:"
-    << QString::fromUtf8(
-           QJsonDocument(response)
-               .toJson(QJsonDocument::Compact));
-
     /*
      * 兼容后端返回：
      *
@@ -671,6 +690,15 @@ void MainWindow::enterLogicDialog(const QJsonObject& response)
 
     const QString token =
         response.value(QStringLiteral("token")).toString();
+
+    const QString uid =
+        response.value(QStringLiteral("uid")).toString();
+
+    const QString deviceId =
+        response.value(QStringLiteral("device_id")).toString();
+
+    const QString serverId =
+        response.value(QStringLiteral("server_id")).toString();
 
     /*
      * 兼容两种服务器地址字段：
@@ -718,6 +746,9 @@ void MainWindow::enterLogicDialog(const QJsonObject& response)
     qDebug()
         << "[login] parsed fields:"
         << "email=" << email
+        << "uid=" << uid
+        << "deviceId=" << deviceId
+        << "serverId=" << serverId
         << "tokenLength=" << token.length()
         << "host=" << host
         << "port=" << port;
@@ -740,6 +771,27 @@ void MainWindow::enterLogicDialog(const QJsonObject& response)
             QStringLiteral("登录响应缺少 token"),
             false);
 
+        return;
+    }
+
+    bool uidOk = false;
+    bool deviceIdOk = false;
+    const quint64 parsedUid = uid.toULongLong(&uidOk);
+    const quint64 parsedDeviceId = deviceId.toULongLong(&deviceIdOk);
+
+    if (!uidOk || parsedUid == 0 || !deviceIdOk || parsedDeviceId == 0)
+    {
+        showLoginTip(
+            QStringLiteral("登录响应中的 uid/device_id 无效"),
+            false);
+        return;
+    }
+
+    if (serverId.isEmpty())
+    {
+        showLoginTip(
+            QStringLiteral("登录响应缺少 server_id"),
+            false);
         return;
     }
 
@@ -800,7 +852,10 @@ void MainWindow::enterLogicDialog(const QJsonObject& response)
      * 后续连接 Chat Server 时可以读取：
      *
      * logicDialog_->property("loginEmail")
+     * logicDialog_->property("loginUid")
+     * logicDialog_->property("loginDeviceId")
      * logicDialog_->property("loginToken")
+     * logicDialog_->property("chatServerId")
      * logicDialog_->property("chatHost")
      * logicDialog_->property("chatPort")
      */
@@ -809,8 +864,20 @@ void MainWindow::enterLogicDialog(const QJsonObject& response)
         email);
 
     logicDialog_->setProperty(
+        "loginUid",
+        uid);
+
+    logicDialog_->setProperty(
+        "loginDeviceId",
+        deviceId);
+
+    logicDialog_->setProperty(
         "loginToken",
         token);
+
+    logicDialog_->setProperty(
+        "chatServerId",
+        serverId);
 
     logicDialog_->setProperty(
         "chatHost",

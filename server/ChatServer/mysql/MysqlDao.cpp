@@ -1,4 +1,4 @@
-#include "MysqlDao.h"
+ï»¿#include "MysqlDao.h"
 #include "ConfigMgr.h"
 
 #include <iostream>
@@ -563,7 +563,7 @@ RegisterUserDbResult MysqlDao::RegisterUser(
             << exception.getSQLState()
             << '\n';
 
-        // ·ÀÖ¹²¢·¢×¢²áÔì³ÉÎ¨Ò»Ë÷Òı³åÍ»
+        // é˜²æ­¢å¹¶å‘æ³¨å†Œé€ æˆå”¯ä¸€ç´¢å¼•å†²çª
         if (exception.getErrorCode() == 1062)
         {
             return RegisterUserDbResult::UserAlreadyExists;
@@ -582,7 +582,7 @@ RegisterUserDbResult MysqlDao::RegisterUser(
     }
 }
 
-UserLoginQueryResult MysqlDao::GetUserLoginInfo(const std::string& email)
+UserPasswordHashQueryResult MysqlDao::GetUserPasswordHash(const std::string& email)
 {
     MysqlConnectionGuard connection(
         pool_,
@@ -598,7 +598,7 @@ UserLoginQueryResult MysqlDao::GetUserLoginInfo(const std::string& email)
     {
         std::unique_ptr<sql::PreparedStatement> statement(
             connection->prepareStatement(
-                "SELECT uid, pwd "
+                "SELECT pwd "
                 "FROM users "
                 "WHERE email = ? "
                 "LIMIT 1"
@@ -613,25 +613,16 @@ UserLoginQueryResult MysqlDao::GetUserLoginInfo(const std::string& email)
 
         if (!result->next())
         {
-            // ÓÊÏä¶ÔÓ¦µÄÓÃ»§²»´æÔÚ
-            return {
-                RegisterUserDbResult::UserNotFound,
-                0,
-                ""
-            };
+            // é‚®ç®±å¯¹åº”çš„ç”¨æˆ·ä¸å­˜åœ¨
+            return {RegisterUserDbResult::UserNotFound, ""};
         }
 
-        return {
-            RegisterUserDbResult::Success,
-            static_cast<std::uint64_t>(
-                result->getUInt64("uid")),
-            result->getString("pwd").asStdString()
-        };
+        return {RegisterUserDbResult::Success, result->getString("pwd").asStdString()};
     }
     catch (const sql::SQLException& exception)
     {
         std::cerr
-            << "GetUserLoginInfo SQL error: "
+            << "GetUserPasswordHash SQL error: "
             << exception.what()
             << ", error code: "
             << exception.getErrorCode()
@@ -644,7 +635,7 @@ UserLoginQueryResult MysqlDao::GetUserLoginInfo(const std::string& email)
     catch (const std::exception& exception)
     {
         std::cerr
-            << "GetUserLoginInfo error: "
+            << "GetUserPasswordHash error: "
             << exception.what()
             << '\n';
 

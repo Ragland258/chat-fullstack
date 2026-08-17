@@ -36,42 +36,16 @@ namespace
      */
     constexpr std::size_t LOGIN_TOKEN_BYTES = 32;
 
-    /*
-     * Redis key 的固定前缀。
-     *
-     * 假设 email 是：
-     *     user@example.com
-     *
-     * 最终 Redis key 是：
-     *     login:token:user@example.com
-     */
-    constexpr const char* LOGIN_TOKEN_KEY_PREFIX =
-        "login:token:";
+    constexpr const char* LOGIN_SESSION_KEY_PREFIX =
+        "login:session:";
 
-    /*
-     * 根据 email 生成 Redis key。
-     *
-     * 参数：
-     *     email：用户邮箱
-     *
-     * 返回：
-     *     login:token: + email
-     *
-     * 示例：
-     *     email = "user@example.com"
-     *
-     * 返回：
-     *     "login:token:user@example.com"
-     */
-    std::string MakeLoginTokenKey(
-        const std::string& email
-    )
+    std::string MakeLoginSessionKey(
+        std::uint64_t uid,
+        std::uint64_t deviceId)
     {
-        /*
-         * 目前没有对 email 做哈希处理，
-         * 直接把 email 拼接到 Redis key 后面。
-         */
-        return std::string(LOGIN_TOKEN_KEY_PREFIX) + email;
+        return std::string(LOGIN_SESSION_KEY_PREFIX) +
+            std::to_string(uid) + ":" +
+            std::to_string(deviceId);
     }
 
     /*
@@ -371,13 +345,16 @@ return 1
     }
 }
 
-std::string RedisMgr::CreateLoginToken(const std::string& email, int expireSeconds)
+std::string RedisMgr::CreateLoginSession(
+    std::uint64_t uid,
+    std::uint64_t deviceId,
+    const std::string& serverId,
+    int expireSeconds)
 {
-
-    if (email.empty() || expireSeconds <= 0)
+    if (uid == 0 || deviceId == 0 || serverId.empty() || expireSeconds <= 0)
     {
         std::cerr
-            << "[CreateLoginToken] invalid arguments"
+            << "[CreateLoginSession] invalid arguments"
             << std::endl;
 
         return "";
@@ -388,42 +365,31 @@ std::string RedisMgr::CreateLoginToken(const std::string& email, int expireSecon
     if (!GenerateSecureLoginToken(generatedToken))
     {
         std::cerr
-            << "[CreateLoginToken] token generation failed"
+            << "[CreateLoginSession] token generation failed"
             << std::endl;
 
         return "";
     }
 
-    const std::string redisKey =
-        MakeLoginTokenKey(email);
+    const std::string redisKey = MakeLoginSessionKey(uid, deviceId);
+    const std::string uidText = std::to_string(uid);
+    const std::string deviceIdText = std::to_string(deviceId);
 
     /*
-     * KEYS[1]：login:token:<email>
-     * ARGV[1]：新 token
-     * ARGV[2]：有效期，单位秒
-     *
-     * 如果 key 已经存在，直接覆盖旧 token。
+     * HSET 与 EXPIRE 在同一个 Lua 脚本中执行，避免只写入 Hash
+     * 却没有设置 TTL 的半完成状态。
      */
     static const std::string luaScript = R"lua(
-local token = ARGV[1]
-local ttl = tonumber(ARGV[2])
-
-if not token or token == "" then
-    return -1
-end
-
+local ttl = tonumber(ARGV[5])
 if not ttl or ttl <= 0 then
-    return -2
+    return 0
 end
-
-redis.call(
-    "SET",
-    KEYS[1],
-    token,
-    "EX",
-    ttl
-)
-
+redis.call("HSET", KEYS[1],
+    "uid", ARGV[1],
+    "token", ARGV[2],
+    "server_id", ARGV[3],
+    "device_id", ARGV[4])
+redis.call("EXPIRE", KEYS[1], ttl)
 return 1
 )lua";
 
@@ -436,7 +402,7 @@ return 1
     if (!connection)
     {
         std::cerr
-            << "[CreateLoginToken] no available Redis connection"
+            << "[CreateLoginSession] no available Redis connection"
             << std::endl;
 
         return "";
@@ -447,7 +413,7 @@ return 1
     reply = reinterpret_cast<redisReply*>(
         redisCommand(
             connection,
-            "EVAL %b 1 %b %b %d",
+            "EVAL %b 1 %b %b %b %b %b %d",
 
             luaScript.data(),
             static_cast<std::size_t>(luaScript.size()),
@@ -455,8 +421,17 @@ return 1
             redisKey.data(),
             static_cast<std::size_t>(redisKey.size()),
 
+            uidText.data(),
+            static_cast<std::size_t>(uidText.size()),
+
             generatedToken.data(),
             static_cast<std::size_t>(generatedToken.size()),
+
+            serverId.data(),
+            static_cast<std::size_t>(serverId.size()),
+
+            deviceIdText.data(),
+            static_cast<std::size_t>(deviceIdText.size()),
 
             expireSeconds
         )
@@ -465,7 +440,7 @@ return 1
     if (!reply)
     {
         std::cerr
-            << "[CreateLoginToken] Redis returned no reply"
+            << "[CreateLoginSession] Redis returned no reply"
             << std::endl;
 
         return "";
@@ -474,7 +449,7 @@ return 1
     if (reply->type == REDIS_REPLY_ERROR)
     {
         std::cerr
-            << "[CreateLoginToken] Lua error: "
+            << "[CreateLoginSession] Lua error: "
             << (reply->str ? reply->str : "unknown error")
             << std::endl;
 
@@ -484,7 +459,7 @@ return 1
     if (reply->type != REDIS_REPLY_INTEGER)
     {
         std::cerr
-            << "[CreateLoginToken] unexpected reply type: "
+            << "[CreateLoginSession] unexpected reply type: "
             << reply->type
             << std::endl;
 
@@ -494,7 +469,7 @@ return 1
     if (reply->integer != 1)
     {
         std::cerr
-            << "[CreateLoginToken] Lua returned: "
+            << "[CreateLoginSession] Lua returned: "
             << reply->integer
             << std::endl;
 
@@ -502,21 +477,54 @@ return 1
     }
 
     // Redis 写入成功后，才向调用方返回 token。
-    return std::move(generatedToken);
+    return generatedToken;
 
 }
 
-bool RedisMgr::VerifyLoginToken(const std::string& email, const std::string& token)
+bool RedisMgr::VerifyLoginSession(
+    std::uint64_t uid,
+    std::uint64_t deviceId,
+    const std::string& token,
+    const std::string& serverId)
 {
-    std::string storedToken;
-    if(!Get(email, storedToken))
-    {
-        std::cerr
-            << "[VerifyLoginToken] failed to get token from Redis"
-            << std::endl;
+    if (uid == 0 || deviceId == 0 || token.empty() || serverId.empty())
         return false;
-	}
-	return storedToken == token;
+
+    const std::string redisKey = MakeLoginSessionKey(uid, deviceId);
+    const std::string uidText = std::to_string(uid);
+    const std::string deviceIdText = std::to_string(deviceId);
+
+    static const std::string luaScript = R"lua(
+local values = redis.call("HMGET", KEYS[1],
+    "uid", "token", "server_id", "device_id")
+if values[1] == ARGV[1] and
+   values[2] == ARGV[2] and
+   values[3] == ARGV[3] and
+   values[4] == ARGV[4] then
+    return 1
+end
+return 0
+)lua";
+
+    RedisConGuard guard(RedisPool::GetInstance()->BorrowConnect());
+    auto* connection = guard.get();
+    if (!connection)
+        return false;
+
+    RedisReplyMgr reply(reinterpret_cast<redisReply*>(redisCommand(
+        connection,
+        "EVAL %b 1 %b %b %b %b %b",
+        luaScript.data(), static_cast<std::size_t>(luaScript.size()),
+        redisKey.data(), static_cast<std::size_t>(redisKey.size()),
+        uidText.data(), static_cast<std::size_t>(uidText.size()),
+        token.data(), static_cast<std::size_t>(token.size()),
+        serverId.data(), static_cast<std::size_t>(serverId.size()),
+        deviceIdText.data(), static_cast<std::size_t>(deviceIdText.size()))));
+
+    if (!reply || reply->type != REDIS_REPLY_INTEGER)
+        return false;
+
+    return reply->integer == 1;
 }
 
 bool RedisMgr::Connect(const std::string& host, int port)

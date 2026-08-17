@@ -16,13 +16,13 @@
 #rootFrame {
     background: #ffffff;
     border: 1px solid #e7e9f2;
-    border-radius: 22px;
+    border-radius: 14px;
 }
 #sideBar {
-    background: qlineargradient(x1:0, y1:0, x2:0, y2:1,
-                                stop:0 #5f6ff2, stop:1 #7759e8);
-    border-top-left-radius: 22px;
-    border-bottom-left-radius: 22px;
+    background: #ffffff;
+    border-right: 1px solid #e8e9eb;
+    border-top-left-radius: 14px;
+    border-bottom-left-radius: 14px;
 }
 #profileBadge {
     min-width: 44px;
@@ -30,33 +30,34 @@
     min-height: 44px;
     max-height: 44px;
     border-radius: 15px;
-    background: rgba(255, 255, 255, 242);
-    color: #685de9;
+    background: #202226;
+    color: #ffffff;
     font-size: 16px;
     font-weight: 700;
 }
-#messageNav, #contactNav, #favoriteNav, #settingsNav {
-    min-width: 42px;
-    max-width: 42px;
-    min-height: 42px;
-    max-height: 42px;
+#messageNav, #contactNav, #spaceNav, #publishNav, #settingsNav {
+    min-width: 52px;
+    max-width: 52px;
+    min-height: 46px;
+    max-height: 46px;
     border: none;
-    border-radius: 14px;
-    color: rgba(255, 255, 255, 199);
+    border-radius: 10px;
+    color: #747980;
     background: transparent;
-    font-size: 18px;
+    font-size: 11px;
 }
-#messageNav {
-    color: #665be7;
-    background: rgba(255, 255, 255, 242);
+#messageNav:checked, #contactNav:checked, #spaceNav:checked, #publishNav:checked, #settingsNav:checked {
+    color: #202226;
+    background: #eeeeef;
+    font-weight: 600;
 }
-#messageNav:hover, #contactNav:hover, #favoriteNav:hover, #settingsNav:hover {
-    color: #ffffff;
-    background: rgba(255, 255, 255, 43);
+#messageNav:hover, #contactNav:hover, #spaceNav:hover, #publishNav:hover, #settingsNav:hover {
+    color: #202226;
+    background: #f3f3f4;
 }
 #conversationPanel {
-    background: #fbfbfe;
-    border-right: 1px solid #eceef4;
+    background: #fafafa;
+    border-right: 1px solid #e8e9eb;
 }
 #conversationTitle {
     color: #1f2435;
@@ -70,13 +71,13 @@
     max-height: 34px;
     border: 1px solid #e4e6ef;
     border-radius: 11px;
-    color: #675de8;
-    background: #ffffff;
+    color: #34373c;
+    background: #f0f0f1;
     font-size: 18px;
 }
 #addConversationButton:hover {
-    background: #f3f1ff;
-    border-color: #d6d1ff;
+    background: #e7e7e8;
+    border-color: #d8d9db;
 }
 #searchEdit {
     min-height: 38px;
@@ -84,11 +85,11 @@
     border-radius: 12px;
     padding: 0 13px;
     color: #33384a;
-    background: #f4f5f9;
+    background: #f0f0f1;
     font-size: 12px;
 }
 #searchEdit:focus {
-    border-color: #756bf0;
+    border-color: #aeb1b7;
     background: #ffffff;
 }
 #conversationScroll {
@@ -99,17 +100,17 @@
     background: transparent;
 }
 #activeConversation {
-    background: #efefff;
-    border: 1px solid #e1defe;
-    border-radius: 15px;
+    background: #ececed;
+    border: 1px solid #e2e3e5;
+    border-radius: 11px;
 }
 #conversationTwo, #conversationThree, #conversationFour, #conversationFive {
     background: transparent;
     border: 1px solid transparent;
-    border-radius: 15px;
+    border-radius: 11px;
 }
 #conversationTwo:hover, #conversationThree:hover, #conversationFour:hover, #conversationFive:hover {
-    background: #f4f5fa;
+    background: #f0f0f1;
 }
 #avatarOne, #avatarTwo, #avatarThree, #avatarFour, #avatarFive, #chatAvatar, #messageAvatarOne, #messageAvatarTwo {
     min-width: 42px;
@@ -121,12 +122,12 @@
     font-size: 13px;
     font-weight: 700;
 }
-#avatarOne, #chatAvatar, #messageAvatarOne { background: #7569ef; }
-#avatarTwo { background: #4ba9e8; }
-#avatarThree { background: #f49a58; }
-#avatarFour { background: #49b88c; }
-#avatarFive { background: #dc6f95; }
-#messageAvatarTwo { background: #4ba9e8; }
+#avatarOne, #chatAvatar, #messageAvatarOne { background: #303338; }
+#avatarTwo { background: #62666d; }
+#avatarThree { background: #7a7e84; }
+#avatarFour { background: #555a61; }
+#avatarFive { background: #8a8e94; }
+#messageAvatarTwo { background: #62666d; }
 #conversationNameOne, #conversationNameTwo, #conversationNameThree, #conversationNameFour, #conversationNameFive {
     color: #292e3e;
     font-size: 13px;
@@ -143,20 +144,20 @@
     min-height: 18px;
     max-height: 18px;
     border-radius: 9px;
-    background: #6e63e9;
+    background: #202226;
     color: #ffffff;
     font-size: 9px;
     font-weight: 700;
 }
 #chatPanel {
     background: #ffffff;
-    border-top-right-radius: 22px;
-    border-bottom-right-radius: 22px;
+    border-top-right-radius: 14px;
+    border-bottom-right-radius: 14px;
 }
 #chatHeader {
     background: #ffffff;
     border-bottom: 1px solid #eceef4;
-    border-top-right-radius: 22px;
+    border-top-right-radius: 14px;
 }
 #chatName {
     color: #232838;
@@ -179,8 +180,8 @@
     font-size: 16px;
 }
 #searchChatButton:hover, #callButton:hover, #videoButton:hover, #moreButton:hover {
-    background: #f3f4f8;
-    color: #5f56da;
+    background: #f0f0f1;
+    color: #202226;
 }
 #messageScroll {
     border: none;
@@ -199,8 +200,7 @@
     border-radius: 15px;
 }
 #outgoingBubbleOne, #outgoingBubbleTwo {
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                                stop:0 #5d7df5, stop:1 #8062e9);
+    background: #24262a;
     border: none;
     border-radius: 15px;
 }
@@ -222,7 +222,7 @@
 #composerFrame {
     background: #ffffff;
     border-top: 1px solid #eceef4;
-    border-bottom-right-radius: 22px;
+    border-bottom-right-radius: 14px;
 }
 #emojiButton, #imageButton, #fileButton {
     min-width: 32px;
@@ -236,8 +236,8 @@
     font-size: 16px;
 }
 #emojiButton:hover, #imageButton:hover, #fileButton:hover {
-    background: #f2f3f8;
-    color: #6359df;
+    background: #f0f0f1;
+    color: #202226;
 }
 #messageEdit {
     border: 1px solid #e5e8f0;
@@ -248,7 +248,7 @@
     font-size: 12px;
 }
 #messageEdit:focus {
-    border-color: #766bf0;
+    border-color: #aeb1b7;
     background: #ffffff;
 }
 #sendButton {
@@ -259,11 +259,10 @@
     color: #ffffff;
     font-size: 12px;
     font-weight: 700;
-    background: qlineargradient(x1:0, y1:0, x2:1, y2:0,
-                                stop:0 #527af3, stop:1 #855ee8);
+    background: #202226;
 }
 #sendButton:hover {
-    background: #665ae3;
+    background: #3a3d42;
 }</string>
   </property>
   <layout class="QVBoxLayout" name="dialogOuterLayout">
@@ -282,22 +281,23 @@
       <property name="bottomMargin"><number>0</number></property>
       <item>
        <widget class="QFrame" name="sideBar">
-        <property name="minimumSize"><size><width>74</width><height>0</height></size></property>
-        <property name="maximumSize"><size><width>74</width><height>16777215</height></size></property>
+        <property name="minimumSize"><size><width>78</width><height>0</height></size></property>
+        <property name="maximumSize"><size><width>78</width><height>16777215</height></size></property>
         <property name="frameShape"><enum>QFrame::NoFrame</enum></property>
         <layout class="QVBoxLayout" name="sideLayout">
          <property name="spacing"><number>13</number></property>
-         <property name="leftMargin"><number>16</number></property>
+         <property name="leftMargin"><number>13</number></property>
          <property name="topMargin"><number>22</number></property>
-         <property name="rightMargin"><number>16</number></property>
+         <property name="rightMargin"><number>13</number></property>
          <property name="bottomMargin"><number>22</number></property>
          <item alignment="Qt::AlignHCenter"><widget class="QLabel" name="profileBadge"><property name="text"><string>我</string></property><property name="alignment"><set>Qt::AlignCenter</set></property></widget></item>
          <item><spacer name="sideTopSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>20</height></size></property></spacer></item>
-         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="messageNav"><property name="text"><string>✦</string></property><property name="toolTip"><string>消息</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
-         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="contactNav"><property name="text"><string>◎</string></property><property name="toolTip"><string>联系人</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
-         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="favoriteNav"><property name="text"><string>☆</string></property><property name="toolTip"><string>收藏</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="messageNav"><property name="text"><string>消息</string></property><property name="checkable"><bool>true</bool></property><property name="checked"><bool>true</bool></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="contactNav"><property name="text"><string>好友</string></property><property name="checkable"><bool>true</bool></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="spaceNav"><property name="text"><string>空间</string></property><property name="checkable"><bool>true</bool></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="publishNav"><property name="text"><string>发布</string></property><property name="checkable"><bool>true</bool></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
          <item><spacer name="sideBottomSpacer"><property name="orientation"><enum>Qt::Vertical</enum></property><property name="sizeHint" stdset="0"><size><width>20</width><height>240</height></size></property></spacer></item>
-         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="settingsNav"><property name="text"><string>⚙</string></property><property name="toolTip"><string>设置</string></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
+         <item alignment="Qt::AlignHCenter"><widget class="QPushButton" name="settingsNav"><property name="text"><string>设置</string></property><property name="checkable"><bool>true</bool></property><property name="cursor"><cursorShape>PointingHandCursor</cursorShape></property></widget></item>
         </layout>
        </widget>
       </item>

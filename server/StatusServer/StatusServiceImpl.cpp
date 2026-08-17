@@ -3,13 +3,32 @@
 #include "RedisMgr.h"
 
 #include <iostream>
-#include <mutex>
-#include <string>
+#include <stdexcept>
 
 StatusServiceImpl::StatusServiceImpl()
 {
-	LoadChatServer("ChatServer1");
-	LoadChatServer("ChatServer2");
+    const auto config = ConfigMgr::GetInstance();
+    const std::string configuredTtl = (*config)["RedisServer"]["TTL"];
+
+    if (!configuredTtl.empty())
+    {
+        try
+        {
+            const int ttl = std::stoi(configuredTtl);
+            if (ttl > 0)
+                _session_ttl_seconds = ttl;
+        }
+        catch (const std::exception& exception)
+        {
+            std::cerr
+                << "Invalid Redis session TTL, using default: "
+                << exception.what()
+                << std::endl;
+        }
+    }
+
+    LoadChatServer("ChatServer1");
+    LoadChatServer("ChatServer2");
 }
 
 grpc::Status StatusServiceImpl::GetChatServer(
@@ -17,135 +36,70 @@ grpc::Status StatusServiceImpl::GetChatServer(
     const message::GetChatServerReq* request,
     message::GetChatServerRsp* reply)
 {
-    /*
-     * 防御性检查。
-     */
-    if (request == nullptr ||
-        reply == nullptr)
+    if (request == nullptr || reply == nullptr)
     {
         return grpc::Status(
             grpc::StatusCode::INTERNAL,
-            "request or reply is null"
-        );
+            "request or reply is null");
     }
 
-    /*
-     * 调用已经被取消。
-     */
-    if (context != nullptr &&
-        context->IsCancelled())
+    if (context != nullptr && context->IsCancelled())
     {
         return grpc::Status(
             grpc::StatusCode::CANCELLED,
-            "request cancelled"
-        );
+            "request cancelled");
     }
 
-    /*
-     * 获取 Gate Server 传来的邮箱和 Token。
-     */
-    const std::string& email =
-        request->email();
+    const std::uint64_t uid = request->uid();
+    const std::uint64_t deviceId = request->device_id();
+    const std::string email = request->email();
 
-    const std::string& token =
-        request->token();
-
-    /*
-     * 检查参数。
-     */
-    if (email.empty() || token.empty())
+    if (uid == 0 || deviceId == 0 || email.empty())
     {
-        reply->set_error(
-            static_cast<int>(
-                ErrorCode::Error_Json
-                )
-        );
-
+        reply->set_error(static_cast<int>(ErrorCode::Error_Json));
         return grpc::Status::OK;
-    }
-
-    /*
-     * 去 Redis 查询：
-     *
-     * login:token:<email>
-     *
-     * 并比较 Redis Token 与请求 Token。
-     */
-    const bool tokenValid =
-        RedisMgr::GetInstance()
-        ->VerifyLoginToken(
-            email,
-            token
-        );
-
-    if (!tokenValid)
-    {
-        reply->set_error(
-            static_cast<int>(
-                ErrorCode::Token_Error
-                )
-        );
-
-        return grpc::Status::OK;
-    }
-
-    /*
-     * 没有配置任何 Chat Server。
-     */
-    if (_servers.empty())
-    {
-        reply->set_error(
-            static_cast<int>(
-				ErrorCode::Server_Empty)
-        );
     }
 
     ChatServer selectedServer;
 
     {
-        /*
-         * 同步 gRPC Server 可能并发调用此函数，
-         * 轮询下标需要加锁。
-         */
-        std::lock_guard<std::mutex> lock(
-            _server_mutex
-        );
+        std::lock_guard<std::mutex> lock(_server_mutex);
 
-        selectedServer =
-            _servers[_server_index];
+        if (_servers.empty())
+        {
+            reply->set_error(static_cast<int>(ErrorCode::Server_Empty));
+            return grpc::Status::OK;
+        }
 
-        _server_index =
-            (_server_index + 1) %
-            _servers.size();
+        selectedServer = _servers[_server_index];
+        _server_index = (_server_index + 1) % _servers.size();
     }
 
-    /*
-     * Token 验证成功后才返回 Chat Server。
-     */
-    reply->set_error(
-        static_cast<int>(
-            ErrorCode::Success
-            )
-    );
+    const std::string token = RedisMgr::GetInstance()->CreateLoginSession(
+        uid,
+        deviceId,
+        email,
+        selectedServer.server_id,
+        _session_ttl_seconds);
 
-    reply->set_ip(
-        selectedServer.host
-    );
+    if (token.empty())
+    {
+        reply->set_error(static_cast<int>(ErrorCode::Redis_Error));
+        return grpc::Status::OK;
+    }
 
-    reply->set_port(
-        std::stoi(selectedServer.port)
-    );
+    reply->set_error(static_cast<int>(ErrorCode::Success));
+    reply->set_ip(selectedServer.host);
+    reply->set_port(selectedServer.port);
+    reply->set_token(token);
+    reply->set_server_id(selectedServer.server_id);
 
-    /*
-     * Status Server 不生成、不返回 Token。
-     */
     std::cout
-        << "Assigned email "
-        << email
-        << " to Chat Server "
-        << selectedServer.host
-        << ":"
-        << selectedServer.port
+        << "Assigned uid=" << uid
+        << ", device_id=" << deviceId
+        << " to " << selectedServer.server_id
+        << " (" << selectedServer.host
+        << ":" << selectedServer.port << ")"
         << std::endl;
 
     return grpc::Status::OK;
@@ -153,18 +107,31 @@ grpc::Status StatusServiceImpl::GetChatServer(
 
 void StatusServiceImpl::LoadChatServer(const std::string& server)
 {
-    auto config = ConfigMgr::GetInstance();
-	auto host = (*config)[server]["Host"];
-	auto port = (*config)[server]["Port"];
-    if (host.empty() || port.empty())
+    const auto config = ConfigMgr::GetInstance();
+    const std::string host = (*config)[server]["Host"];
+    const std::string portText = (*config)[server]["Port"];
+
+    if (server.empty() || host.empty() || portText.empty())
     {
         std::cerr
-            << "ChatServer Host or Port is empty"
+            << server << " Host or Port is empty"
             << std::endl;
         return;
     }
-    ChatServer chatServer;
-    chatServer.host = host;
-    chatServer.port = port;
-	_servers.push_back(chatServer);
+
+    try
+    {
+        const int port = std::stoi(portText);
+        if (port <= 0 || port > 65535)
+            throw std::out_of_range("port must be in range 1..65535");
+
+        _servers.push_back(ChatServer{server, host, port});
+    }
+    catch (const std::exception& exception)
+    {
+        std::cerr
+            << "Invalid " << server << " port: "
+            << exception.what()
+            << std::endl;
+    }
 }

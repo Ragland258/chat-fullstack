@@ -37,8 +37,15 @@ ErrorCode MysqlMgr::RegisterUser(
     }
 }
 
-UserLoginQueryResult MysqlMgr::GetLoginUserInfo(
-    const std::string& email)
+std::string MysqlMgr::GetPasswordHash(const std::string& email)
 {
-    return dao_.GetUserLoginInfo(email);
+    const UserPasswordHashQueryResult result =
+		dao_.GetUserPasswordHash(email);
+    switch (result.result)
+    {
+    case RegisterUserDbResult::Success:
+			return result.passwordHash;
+    default:
+        return {};
+    }
 }

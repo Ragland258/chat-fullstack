@@ -1,0 +1,10 @@
+[ChatServer]
+ServerId=ChatServer1
+Host=127.0.0.1
+Port=7891
+
+[RedisServer]
+Host=127.0.0.1
+Port=6379
+password=
+size=10

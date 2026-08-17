@@ -7,8 +7,9 @@
 
 GetChatServerRsp
 StatusGrpcClient::GetChatServer(
+    std::uint64_t uid,
     const std::string& email,
-    const std::string& token)
+    std::uint64_t deviceId)
 {
     GetChatServerRsp reply;
 
@@ -16,7 +17,7 @@ StatusGrpcClient::GetChatServer(
      * Gate Server 本地先检查参数，
      * 避免发送明显无效的 RPC。
      */
-    if (email.empty() || token.empty())
+    if (uid == 0 || email.empty() || deviceId == 0)
     {
         reply.set_error(
             static_cast<int>(
@@ -33,7 +34,8 @@ StatusGrpcClient::GetChatServer(
     GetChatServerReq request;
 
     request.set_email(email);
-    request.set_token(token);
+    request.set_uid(uid);
+    request.set_device_id(deviceId);
 
     /*
      * 设置调用超时。

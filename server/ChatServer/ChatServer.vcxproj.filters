@@ -1,6 +1,9 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
+    <None Include="config.ini.example" />
+  </ItemGroup>
+  <ItemGroup>
     <Filter Include="ioLoop">
       <UniqueIdentifier>{14B7E1A7-7C7B-4B76-AC02-28B638FE64DB}</UniqueIdentifier>
     </Filter>
@@ -24,6 +27,12 @@
     <Filter Include="资源文件">
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Redis">
+      <UniqueIdentifier>{feb51d75-e82e-4cac-b770-3d98f52ed2f5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="mysql">
+      <UniqueIdentifier>{a4e6e684-07d3-4aef-bda1-dbb1ca23f84e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -54,8 +63,26 @@
     <ClCompile Include="handler\RequestHandler.cpp">
       <Filter>handler</Filter>
     </ClCompile>
+    <ClCompile Include="handler\Message.cpp">
+      <Filter>handler</Filter>
+    </ClCompile>
+    <ClCompile Include="redis\RedisMgr.cpp">
+      <Filter>Redis</Filter>
+    </ClCompile>
+    <ClCompile Include="mysql\MysqlDao.cpp">
+      <Filter>mysql</Filter>
+    </ClCompile>
+    <ClCompile Include="mysql\MysqlMgr.cpp">
+      <Filter>mysql</Filter>
+    </ClCompile>
     <ClCompile Include="handler\ErrorHandler.cpp">
+      <Filter>handler</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigMgr.cpp">
       <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="handler\SearchHandler.cpp">
+      <Filter>handler</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -95,8 +122,26 @@
     <ClInclude Include="ThreadPool.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="handler\Message.h">
+      <Filter>handler</Filter>
+    </ClInclude>
+    <ClInclude Include="redis\RedisMgr.h">
+      <Filter>Redis</Filter>
+    </ClInclude>
+    <ClInclude Include="mysql\MysqlMgr.h">
+      <Filter>mysql</Filter>
+    </ClInclude>
+    <ClInclude Include="mysql\MysqlDao.h">
+      <Filter>mysql</Filter>
+    </ClInclude>
     <ClInclude Include="handler\ErrorHandler.h">
-      <Filter>头文件</Filter>
+      <Filter>handler</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigMgr.h">
+      <Filter>源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="handler\SearchHandler.h">
+      <Filter>handler</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

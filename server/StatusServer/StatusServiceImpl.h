@@ -1,9 +1,14 @@
 ﻿#pragma once
 #include "ConfigMgr.h"
 #include "const.h"
-#include <grpcpp/grpcpp.h>
 #include "message.grpc.pb.h"
 #include "message.pb.h"
+
+#include <cstddef>
+#include <grpcpp/grpcpp.h>
+#include <mutex>
+#include <string>
+#include <vector>
 
 
 /*
@@ -13,11 +18,14 @@
  */
 struct ChatServer
 {
+    // Stable server identifier written to Redis, e.g. ChatServer1.
+    std::string server_id;
+
     // 聊天服务器地址，例如：127.0.0.1
     std::string host;
 
     // 聊天服务器端口，例如：8081
-    std::string port;
+    int port{0};
 };
 
 /*
@@ -91,7 +99,10 @@ private:
      * 第二次请求：选择 _servers[1]
      * 第三次请求：重新选择 _servers[0]
      */
-    std::size_t _server_index;
+    std::size_t _server_index{0};
+
+    // Redis login-session lifetime in seconds.
+    int _session_ttl_seconds{30 * 60};
 
     /*
      * 用于保护 _server_index。

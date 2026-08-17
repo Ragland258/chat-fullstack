@@ -1,7 +1,9 @@
 #include "Connection.h"
 #include "ConnectionMgr.h"
 #include "route/LogicRoute.h"
-
+#include "ThreadPool.h"
+#include "ConfigMgr.h"
+#include "redis/RedisMgr.h"
 namespace
 {
 	/**
@@ -73,12 +75,12 @@ Connection::Connection(asio::io_context& ioc)
 	// 生成唯一uuid
 	boost::uuids::random_generator generator;
 	boost::uuids::uuid uuid = generator();
-	uuid_ = boost::uuids::to_string(uuid);
+	session_id_ = boost::uuids::to_string(uuid);
 }
 
 string Connection::GetId()
 {
-	return uuid_;
+	return session_id_;
 }
 
 asio::ip::tcp::socket& Connection::GetSocket()
@@ -103,6 +105,25 @@ void Connection::SendResponse(std::string send_json)
 	);
 }
 
+std::string Connection::JsonResponse(ErrorCode error, const std::string& message, Json::Value data)
+{
+	Json::Value root(Json::objectValue);
+
+	root[ "error" ] =
+		static_cast<int>(error);
+
+	root[ "message" ] =
+		message;
+
+	if ( !data.isNull() )
+	{
+		root[ "data" ] =
+			std::move(data);
+	}
+
+	return WriteJson(root);
+}
+
 void Connection::AsyncWrite()
 {
 	auto self = shared_from_this();
@@ -125,6 +146,107 @@ void Connection::AsyncWrite()
 			}
 		}
 	);
+}
+
+void Connection::BindSession(AuthSession session)
+{
+	user_ = std::move(session);
+}
+
+std::uint64_t Connection::ParseUint64(beast::string_view text)
+{
+	if ( text.empty() )
+		return 0;
+
+	std::uint64_t value{ 0 };
+
+	const char* begin = text.data();
+	const char* end = begin + text.size();
+
+	auto [position, error] =
+		std::from_chars(begin, end, value);
+
+	if ( error != std::errc{} ||
+		position != end ||
+		value == 0 )
+	{
+		return 0;
+	}
+
+	return value;
+}
+
+std::string Connection::ParseBearer(beast::string_view authorization)
+{
+	constexpr beast::string_view prefix = "Bearer ";
+
+	if ( authorization.size() <= prefix.size() )
+		return { };
+	if ( authorization.substr(0, prefix.size()) != prefix )
+		return { };
+
+	const auto token = authorization.substr(prefix.size());
+	return std::string(token.data(), token.size());
+}
+
+void Connection::RejectHandShake(
+	http::status status,
+	std::string message)
+{
+	auto self = shared_from_this();
+	auto response = std::make_shared<http::response<http::string_body>>(
+		status,
+		handshake_request_.version());
+
+	response->set(http::field::content_type, "text/plain; charset=utf-8");
+	response->set(http::field::connection, "close");
+	response->body() = std::move(message);
+	response->prepare_payload();
+
+	http::async_write(
+		ws_->next_layer(),
+		*response,
+		[self, response](boost::system::error_code, std::size_t)
+		{
+			boost::system::error_code ignored;
+			beast::get_lowest_layer(*self->ws_).socket().shutdown(
+				asio::ip::tcp::socket::shutdown_both,
+				ignored);
+			beast::get_lowest_layer(*self->ws_).socket().close(ignored);
+		});
+}
+
+void Connection::AcceptUpgrade()
+{
+	auto self = shared_from_this();
+
+	ws_->async_accept(
+		handshake_request_,
+		[ self ] (boost::system::error_code ec)
+		{
+			if ( ec )
+			{
+				std::cout << "websocket upgrade failed: "
+					<< ec.message() << std::endl;
+				return;
+			}
+
+			// 现在已经完成鉴权和WebSocket升级
+			ConnectionMgr::GetInstance()->AddConnection(self);
+			self->Start();
+		});
+}
+
+std::string Connection::WriteJson(const Json::Value& root)
+{
+	Json::StreamWriterBuilder writer;
+
+	// 关闭缩进和换行，压缩 JSON。
+	writer[ "indentation" ] = "";
+
+	return Json::writeString(
+		writer,
+		root);
 }
 
 void Connection::Start()
@@ -174,28 +296,140 @@ void Connection::Start()
 		});
 }
 
+bool Connection::IsAuthenticated() const noexcept
+{
+	return user_.has_value();
+}
+
+std::uint64_t Connection::GetUserId() const noexcept
+{
+	return user_ ? user_->uid : 0;
+}
+
+std::uint64_t Connection::GetDeviceId() const noexcept
+{
+	return user_ ? user_->device_id : 0;
+}
+
+std::string Connection::GetEmail() const
+{
+	return user_ ? user_->email : std::string{};
+}
+
 void Connection::AsyncAccept()
 {
 	auto self = shared_from_this();
-	ws_->async_accept(
-		[self](boost::system::error_code err)
+	http::async_read(
+		ws_->next_layer(),
+		handshake_buffer_,
+		handshake_request_,
+		[self](boost::system::error_code err, std::size_t)
 		{
-			try
+			if ( err )
 			{
-				if (!err)
-				{
-					ConnectionMgr::GetInstance()->AddConnection(self);
-					self->Start();
-				}
-				else
-				{
-					std::cout << "websocket accept failed, err is " << err.what() << std::endl;
-				}
+				std::cout << "read upgrade request failed: "
+					<< err.message()
+					<< std::endl;
+				return;
 			}
-			catch (std::exception& ec)
+
+			const auto& request = self->handshake_request_;
+
+			const auto authorization =
+				request[ http::field::authorization ];
+			const auto uidHeader =
+				request[ "X-User-Id" ];
+			const auto deviceHeader =
+				request[ "X-Device-Id" ];
+
+			if ( authorization.empty() ||
+				uidHeader.empty() ||
+				deviceHeader.empty() )
 			{
-				auto err_msg = ec.what();
-				std::cout << "websocket async accept exception :" << err_msg << std::endl;;
+				self->RejectHandShake(
+					http::status::unauthorized,
+					"Missing authentication headers"
+				);
+				return;
 			}
+
+			// Authorization: Bearer <token>
+			// Authorization: Bearer xxxxxxxxxx
+			std::string token =
+				self->ParseBearer(authorization);
+
+			const std::uint64_t uid =
+				self->ParseUint64(uidHeader);
+			const std::uint64_t deviceId =
+				self->ParseUint64(deviceHeader);
+
+			if ( token.empty() || uid == 0 || deviceId == 0 )
+			{
+				self->RejectHandShake(
+					http::status::unauthorized,
+					"Missing authentication headers"
+				);
+				return;
+			}
+
+			const auto serverId =
+				(*(ConfigMgr::GetInstance()))[ "ChatServer" ][ "ServerId" ];
+
+			if ( serverId.empty() )
+			{
+				self->RejectHandShake(
+					http::status::internal_server_error,
+					"ChatServer ServerId is not configured"
+				);
+				return;
+			}
+
+			// Redis 查询会阻塞，因此投递到工作线程。
+			std::weak_ptr<Connection> weakConn{ self };
+			ThreadPool::GetInstance()->commit(
+				[uid,
+				deviceId,
+				weakConn,
+				token = std::move(token),
+				serverId]() mutable
+				{
+					auto loginSession =
+						RedisMgr::GetInstance()->VerifyLoginSession
+					(
+						uid,
+						deviceId,
+						token,
+						serverId
+					);
+
+					auto self = weakConn.lock();
+					if ( !self )
+						return;
+
+					// 回到 WebSocket strand 后再修改 Connection 和发起升级。
+					asio::post(
+						self->ws_->get_executor(),
+						[self, loginSession = std::move(loginSession)]() mutable
+						{
+							if ( !loginSession )
+							{
+								self->RejectHandShake(
+									http::status::unauthorized,
+									"Authentication failed"
+								);
+								return;
+							}
+
+							AuthSession session;
+							session.device_id = loginSession->device_id;
+							session.uid = loginSession->uid;
+							session.email = std::move(loginSession->email);
+							self->BindSession(std::move(session));
+
+							self->AcceptUpgrade();
+						}
+					);
+				}
+			);
 		});
 }

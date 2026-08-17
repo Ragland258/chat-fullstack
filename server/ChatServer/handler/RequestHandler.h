@@ -3,6 +3,7 @@
 
 class Connection;
 
+
 class RequestHandler
 {
 public:
@@ -21,5 +22,13 @@ public:
 	virtual void Handler(
 		const Json::Value& data,
 		std::shared_ptr<Connection>) = 0;
+
+	bool cheakSession(const string& token);
+
+	bool ParseUint64(
+		const Json::Value& value,
+		std::uint64_t& result
+	);
+
 };
 

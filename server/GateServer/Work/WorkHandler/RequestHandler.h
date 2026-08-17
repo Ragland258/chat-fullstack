@@ -31,10 +31,10 @@ protected:
     std::string BuildJsonResponse(
         ErrorCode error,
         const std::string& message,
-        const std::string& email = " ",
-        const std::string& token = " ",
-		const std::string& host = " ",
-		const std::string& port = " "
+        const std::string& email = "",
+        const std::string& token = "",
+		const std::string& host = "",
+		const std::string& port = ""
     )
     {
         Json::Value root;
@@ -53,6 +53,27 @@ protected:
         Json::StreamWriterBuilder writer;
         writer["indentation"] = "";
 
+        return Json::writeString(writer, root);
+    }
+
+    // 适合登录等字段较多的响应，避免继续增加位置参数。
+    std::string BuildJsonResponse(
+        ErrorCode error,
+        const std::string& message,
+        const Json::Value& fields)
+    {
+        Json::Value root;
+        root["error"] = static_cast<int>(error);
+        root["message"] = message;
+
+        if (fields.isObject())
+        {
+            for (const auto& name : fields.getMemberNames())
+                root[name] = fields[name];
+        }
+
+        Json::StreamWriterBuilder writer;
+        writer["indentation"] = "";
         return Json::writeString(writer, root);
     }
 };

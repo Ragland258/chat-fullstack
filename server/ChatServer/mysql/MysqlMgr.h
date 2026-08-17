@@ -12,8 +12,7 @@ public:
     MysqlMgr(const MysqlMgr&) = delete;
     MysqlMgr& operator=(const MysqlMgr&) = delete;
     ErrorCode RegisterUser(const std::string& name, const std::string& email, const std::string& pwd);
-	UserLoginQueryResult GetLoginUserInfo(
-		const std::string& email);
+	std::string GetPasswordHash(const std::string& email);
 private:
     MysqlMgr();
     MysqlDao  dao_;

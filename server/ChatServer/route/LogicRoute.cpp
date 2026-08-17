@@ -84,8 +84,8 @@ bool LogicRoute::HandlerPost(const std::string& json, std::shared_ptr<Connection
 		}
 
 		handler->second->Handler(
-			src_root,
-			connection
+			std::move(src_root),
+			std::move(connection)
 		);
 		return true;
 	}

@@ -30,9 +30,12 @@ using std::shared_ptr;
 
 namespace asio = boost::asio;
 namespace beast = boost::beast;
+namespace http = boost::beast::http;
 
 enum class ErrorCode
 {
+	Success = 0,
+
 	// 消息解码错误
 	Message_Json_error = 1001,
 	Messgae_Parse_Timeout = 1002,
@@ -41,7 +44,11 @@ enum class ErrorCode
 	Handler_Timeout = 2001,
 	Send_Error = 2002,
 
-	//mysql
+	// mysql
+	User_Exist = 2005,
+	Mysql_Error = 2010,
+	Mysql_Pool_Timeout = 2011,
+	Mysql_Result_Error = 2012,
 
 	//redis
 

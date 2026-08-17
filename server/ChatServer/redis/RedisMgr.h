@@ -3,6 +3,7 @@
 #include "const.h"
 #include "Singleton.h"
 #include <cstdint>
+#include <optional>
 #include <hiredis/hiredis.h>
 
 enum class VerifyCodeResult : int
@@ -11,6 +12,14 @@ enum class VerifyCodeResult : int
     CodeMismatch = -1,
     CodeMissing = 0,
     Success = 1
+};
+
+struct LoginSessionInfo
+{
+    std::uint64_t uid{ 0 };
+    std::uint64_t device_id{ 0 };
+    std::string email;
+    std::string server_id;
 };
 
 struct RedisReplyMgr
@@ -160,7 +169,7 @@ public:
         const std::string& inputCode
     );
 
-    // ´´½¨Ò»ÌõÉè±¸¼¶µÇÂ¼»á»°£¬²¢ÎªÕû¸ö Redis Hash ÉèÖÃ TTL¡£
+    // åˆ›å»ºä¸€æ¡è®¾å¤‡çº§ç™»å½•ä¼šè¯ï¼Œå¹¶ä¸ºæ•´ä¸ª Redis Hash è®¾ç½® TTLã€‚
     std::string CreateLoginSession(
         std::uint64_t uid,
         std::uint64_t deviceId,
@@ -169,8 +178,8 @@ public:
         int expireSeconds = 30 * 60
     );
 
-    // Í¬Ê±Ğ£Ñé uid¡¢device_id¡¢token ºÍ server_id¡£
-    bool VerifyLoginSession(
+    // æ ¡éªŒä¼šè¯å®‰å…¨å­—æ®µï¼Œå¹¶è¿”å› Redis ä¸­å¯ä¿¡çš„ Emailã€‚
+    std::optional<LoginSessionInfo> VerifyLoginSession(
         std::uint64_t uid,
         std::uint64_t deviceId,
         const std::string& token,

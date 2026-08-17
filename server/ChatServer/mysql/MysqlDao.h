@@ -6,7 +6,6 @@
 #include <chrono>
 #include <condition_variable>
 #include <cstddef>
-#include <cstdint>
 #include <memory>
 #include <mutex>
 #include <queue>
@@ -31,10 +30,9 @@ enum class RegisterUserDbResult
     DatabaseError
 };
 
-struct UserLoginQueryResult
+struct UserPasswordHashQueryResult
 {
-    RegisterUserDbResult result{RegisterUserDbResult::DatabaseError};
-    std::uint64_t uid{0};
+    RegisterUserDbResult result;
     std::string passwordHash;
 };
 
@@ -167,7 +165,7 @@ public:
         const std::string& email,
         const std::string& passwordHash);
 
-    UserLoginQueryResult GetUserLoginInfo(
+    UserPasswordHashQueryResult GetUserPasswordHash(
 		const std::string& email);
 
 private:

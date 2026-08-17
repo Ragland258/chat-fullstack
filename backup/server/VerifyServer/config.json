@@ -1,0 +1,19 @@
+﻿{
+    "email":  {
+                  "user":  "179694839@qq.com",
+                  "pass":  "xlabadhnlgfxcbci"
+              },
+    "mysql":  {
+                  "host":  "127.0.0.1",
+                  "port":  3306,
+                  "user":  "root",
+                  "pass":  "123456",
+                  "database":  "chat"
+              },
+    "redis":  {
+                  "host":  "127.0.0.1",
+                  "port":  6379,
+                  "passwd":  "123456",
+                  "code_expire":  180
+              }
+}

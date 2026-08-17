@@ -17,50 +17,47 @@ service VarifyService {
 }
 
 /*
- * Gate Server Ïò Status Server ÇëÇó·ÖÅä Chat Server¡£
+ * Gate Server å‘ Status Server è¯·æ±‚åˆ†é… Chat Serverã€‚
  */
 message GetChatServerReq {
-    /*
-     * ÓÃ»§µÇÂ¼ÓÊÏä¡£
-     *
-     * Status Server ¸ù¾İÓÊÏä¹¹Ôì Redis Key£º
-     *
-     * login:token:<email>
-     */
+    // ä»…ç”¨äºæ—¥å¿—å’Œè¯Šæ–­ï¼›å¯ä¿¡ç”¨æˆ·èº«ä»½ç”± Gate Server æŸ¥è¯¢ MySQL å¾—åˆ°ã€‚
     string email = 1;
 
-    /*
-     * Gate Server µÇÂ¼³É¹¦ºó´´½¨µÄ Token¡£
-     *
-     * Status Server ²»Éú³É Token£¬Ö»ÑéÖ¤Ëü¡£
-     */
-    string token = 2;
+    // æ—§åè®®ä¸­çš„ token å­—æ®µï¼Œä¸å†ä½¿ç”¨ã€‚
+    reserved 2;
+    reserved "token";
+
+    // MySQL users.uidã€‚
+    uint64 uid = 3;
+
+    // å®¢æˆ·ç«¯æŒä¹…åŒ–çš„è®¾å¤‡æ ‡è¯†ã€‚
+    uint64 device_id = 4;
 }
 
 /*
- * Status Server ·µ»Ø Chat Server µØÖ·¡£
+ * Status Server è¿”å› Chat Server åœ°å€ã€‚
  */
 message GetChatServerRsp {
     /*
-     * ÒµÎñ´íÎóÂë¡£
+     * ä¸šåŠ¡é”™è¯¯ç ã€‚
      */
     int32 error = 1;
 
     /*
-     * Chat Server IP¡£
+     * Chat Server IPã€‚
      */
     string ip = 2;
 
     /*
-     * Chat Server ¶Ë¿Ú¡£
+     * Chat Server ç«¯å£ã€‚
      */
     int32 port = 3;
 
-    /*
-     * Status Server ²»ÔÙ·µ»Ø Token¡£
-     */
-    reserved 4;
-    reserved "token";
+    // Status Server åˆ›å»ºå¹¶å†™å…¥ Redis ç™»å½•ä¼šè¯çš„ tokenã€‚
+    string token = 4;
+
+    // ç¨³å®šæœåŠ¡å™¨æ ‡è¯†ï¼Œä¾‹å¦‚ ChatServer1ã€‚
+    string server_id = 5;
 }
 
 service StatusService {

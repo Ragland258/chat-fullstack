@@ -1,6 +1,7 @@
 #include "RedisMgr.h"
+#include "const.h"
 #include "ConfigMgr.h"
-#include <openssl/rand.h>  // OpenSSL µÄ°²È«Ëæ»úÊıÉú³Éº¯Êı RAND_bytes
+#include <openssl/rand.h>  // OpenSSL çš„å®‰å…¨éšæœºæ•°ç”Ÿæˆå‡½æ•° RAND_bytes
 RedisMgr::RedisMgr()
 {
 }
@@ -17,22 +18,22 @@ void RedisMgr::Close()
 
 
 /*
- * ÄäÃûÃüÃû¿Õ¼ä¡£
+ * åŒ¿åå‘½åç©ºé—´ã€‚
  *
- * ÕâÀï¶¨ÒåµÄ±äÁ¿ºÍº¯ÊıÖ»ÄÜÔÚµ±Ç° .cpp ÎÄ¼şÖĞÊ¹ÓÃ£¬
- * ÆäËû .cpp ÎÄ¼şÎŞ·¨Ö±½Ó·ÃÎÊ£¬±ÜÃâÃû×Ö³åÍ»¡£
+ * è¿™é‡Œå®šä¹‰çš„å˜é‡å’Œå‡½æ•°åªèƒ½åœ¨å½“å‰ .cpp æ–‡ä»¶ä¸­ä½¿ç”¨ï¼Œ
+ * å…¶ä»– .cpp æ–‡ä»¶æ— æ³•ç›´æ¥è®¿é—®ï¼Œé¿å…åå­—å†²çªã€‚
  */
 namespace
 {
     /*
-     * token Ê¹ÓÃ 32 ×Ö½ÚËæ»úÊı¾İ¡£
+     * token ä½¿ç”¨ 32 å­—èŠ‚éšæœºæ•°æ®ã€‚
      *
-     * 1 ×Ö½Ú = 8 bit
-     * 32 ×Ö½Ú = 256 bit
+     * 1 å­—èŠ‚ = 8 bit
+     * 32 å­—èŠ‚ = 256 bit
      *
-     * ºóÃæ×ª»»³ÉÊ®Áù½øÖÆ×Ö·û´®ºó£º
-     * Ã¿¸ö×Ö½Ú×ª»»³ÉÁ½¸ö×Ö·û£¬
-     * ËùÒÔ×îÖÕ token ³¤¶ÈÎª 64 ¸ö×Ö·û¡£
+     * åé¢è½¬æ¢æˆåå…­è¿›åˆ¶å­—ç¬¦ä¸²åï¼š
+     * æ¯ä¸ªå­—èŠ‚è½¬æ¢æˆä¸¤ä¸ªå­—ç¬¦ï¼Œ
+     * æ‰€ä»¥æœ€ç»ˆ token é•¿åº¦ä¸º 64 ä¸ªå­—ç¬¦ã€‚
      */
     constexpr std::size_t LOGIN_TOKEN_BYTES = 32;
 
@@ -49,26 +50,26 @@ namespace
     }
 
     /*
-     * °Ñ¶ş½øÖÆÊı¾İ×ª»»³ÉÊ®Áù½øÖÆ×Ö·û´®¡£
+     * æŠŠäºŒè¿›åˆ¶æ•°æ®è½¬æ¢æˆåå…­è¿›åˆ¶å­—ç¬¦ä¸²ã€‚
      *
-     * RAND_bytes Éú³ÉµÄÊÇ¶ş½øÖÆÊı¾İ£¬
-     * ¶ş½øÖÆÊı¾İ¿ÉÄÜ°üº¬ '\0' µÈ²»¿É´òÓ¡×Ö·û£¬
-     * ËùÒÔ²»ÄÜÖ±½Óµ±×÷ÆÕÍ¨×Ö·û´®·µ»Ø¸ø¿Í»§¶Ë¡£
+     * RAND_bytes ç”Ÿæˆçš„æ˜¯äºŒè¿›åˆ¶æ•°æ®ï¼Œ
+     * äºŒè¿›åˆ¶æ•°æ®å¯èƒ½åŒ…å« '\0' ç­‰ä¸å¯æ‰“å°å­—ç¬¦ï¼Œ
+     * æ‰€ä»¥ä¸èƒ½ç›´æ¥å½“ä½œæ™®é€šå­—ç¬¦ä¸²è¿”å›ç»™å®¢æˆ·ç«¯ã€‚
      *
-     * ÕâÀï½«Ã¿¸ö×Ö½Ú×ª»»³ÉÁ½¸öÊ®Áù½øÖÆ×Ö·û¡£
+     * è¿™é‡Œå°†æ¯ä¸ªå­—èŠ‚è½¬æ¢æˆä¸¤ä¸ªåå…­è¿›åˆ¶å­—ç¬¦ã€‚
      *
-     * Ê¾Àı£º
-     *     Ò»¸ö×Ö½Ú 0xAF
+     * ç¤ºä¾‹ï¼š
+     *     ä¸€ä¸ªå­—èŠ‚ 0xAF
      *
-     * ×ª»»ºó£º
+     * è½¬æ¢åï¼š
      *     "af"
      *
-     * ²ÎÊı£º
-     *     data  £º¶ş½øÖÆÊı¾İµÄÊ×µØÖ·
-     *     length£º¶ş½øÖÆÊı¾İµÄ×Ö½ÚÊı
+     * å‚æ•°ï¼š
+     *     data  ï¼šäºŒè¿›åˆ¶æ•°æ®çš„é¦–åœ°å€
+     *     lengthï¼šäºŒè¿›åˆ¶æ•°æ®çš„å­—èŠ‚æ•°
      *
-     * ·µ»Ø£º
-     *     Ê®Áù½øÖÆ×Ö·û´®
+     * è¿”å›ï¼š
+     *     åå…­è¿›åˆ¶å­—ç¬¦ä¸²
      */
     std::string HexEncode(
         const unsigned char* data,
@@ -76,118 +77,118 @@ namespace
     )
     {
         /*
-         * Ê®Áù½øÖÆ×Ö·û±í¡£
+         * åå…­è¿›åˆ¶å­—ç¬¦è¡¨ã€‚
          *
-         * Êı×Ö 0~15 ·Ö±ğ¶ÔÓ¦£º
+         * æ•°å­— 0~15 åˆ†åˆ«å¯¹åº”ï¼š
          * 0 1 2 3 4 5 6 7 8 9 a b c d e f
          */
         static constexpr char HEX_TABLE[] =
             "0123456789abcdef";
 
         /*
-         * Ò»¸ö×Ö½ÚĞèÒªÁ½¸öÊ®Áù½øÖÆ×Ö·û±íÊ¾¡£
+         * ä¸€ä¸ªå­—èŠ‚éœ€è¦ä¸¤ä¸ªåå…­è¿›åˆ¶å­—ç¬¦è¡¨ç¤ºã€‚
          *
-         * ÀıÈç£º
-         *     32 ×Ö½Ú¶ş½øÖÆÊı¾İ
+         * ä¾‹å¦‚ï¼š
+         *     32 å­—èŠ‚äºŒè¿›åˆ¶æ•°æ®
          *
-         * ×ª»»ºó£º
-         *     64 ¸ö×Ö·û
+         * è½¬æ¢åï¼š
+         *     64 ä¸ªå­—ç¬¦
          *
-         * '\0' Ö»ÊÇÏÈÓÃÀ´³õÊ¼»¯×Ö·û´®ÄÚÈİ£¬
-         * ºóÃæµÄÑ­»·»á°ÑÕâĞ©Î»ÖÃÈ«²¿¸²¸Çµô¡£
+         * '\0' åªæ˜¯å…ˆç”¨æ¥åˆå§‹åŒ–å­—ç¬¦ä¸²å†…å®¹ï¼Œ
+         * åé¢çš„å¾ªç¯ä¼šæŠŠè¿™äº›ä½ç½®å…¨éƒ¨è¦†ç›–æ‰ã€‚
          */
         std::string result(length * 2, '\0');
 
         /*
-         * Öğ¸ö´¦ÀíÔ­Ê¼Êı¾İÖĞµÄÃ¿Ò»¸ö×Ö½Ú¡£
+         * é€ä¸ªå¤„ç†åŸå§‹æ•°æ®ä¸­çš„æ¯ä¸€ä¸ªå­—èŠ‚ã€‚
          */
         for (std::size_t i = 0; i < length; ++i)
         {
             /*
-             * Ò»¸ö×Ö½ÚÓĞ 8 bit£¬ÀıÈç£º
+             * ä¸€ä¸ªå­—èŠ‚æœ‰ 8 bitï¼Œä¾‹å¦‚ï¼š
              *
              *     data[i] = 1010 1111
              *
-             * Ò»¸öÊ®Áù½øÖÆ×Ö·ûÖ»ÄÜ±íÊ¾ 4 bit£¬
-             * ËùÒÔĞèÒª°ÑÕâ¸ö×Ö½Ú·Ö³É£º
+             * ä¸€ä¸ªåå…­è¿›åˆ¶å­—ç¬¦åªèƒ½è¡¨ç¤º 4 bitï¼Œ
+             * æ‰€ä»¥éœ€è¦æŠŠè¿™ä¸ªå­—èŠ‚åˆ†æˆï¼š
              *
-             *     ¸ß 4 Î»£º1010
-             *     µÍ 4 Î»£º1111
+             *     é«˜ 4 ä½ï¼š1010
+             *     ä½ 4 ä½ï¼š1111
              */
 
              /*
-              * »ñÈ¡¸ß 4 Î»¡£
+              * è·å–é«˜ 4 ä½ã€‚
               *
-              * data[i] >> 4£º
-              *     ½«Êı¾İÓÒÒÆ 4 Î»¡£
+              * data[i] >> 4ï¼š
+              *     å°†æ•°æ®å³ç§» 4 ä½ã€‚
               *
-              * ÀıÈç£º
+              * ä¾‹å¦‚ï¼š
               *     1010 1111
-              * ±ä³É£º
+              * å˜æˆï¼š
               *     0000 1010
               *
-              * & 0x0F£º
-              *     Ö»±£Áô×îµÍ 4 Î»¡£
+              * & 0x0Fï¼š
+              *     åªä¿ç•™æœ€ä½ 4 ä½ã€‚
               *
-              * ½á¹ûÊÇÊ®½øÖÆ 10£¬
-              * HEX_TABLE[10] ¾ÍÊÇ×Ö·û 'a'¡£
+              * ç»“æœæ˜¯åè¿›åˆ¶ 10ï¼Œ
+              * HEX_TABLE[10] å°±æ˜¯å­—ç¬¦ 'a'ã€‚
               */
             result[i * 2] =
                 HEX_TABLE[(data[i] >> 4) & 0x0F];
 
             /*
-             * »ñÈ¡µÍ 4 Î»¡£
+             * è·å–ä½ 4 ä½ã€‚
              *
-             * data[i] & 0x0F£º
-             *     Ö»±£Áô×îµÍ 4 Î»¡£
+             * data[i] & 0x0Fï¼š
+             *     åªä¿ç•™æœ€ä½ 4 ä½ã€‚
              *
-             * ÀıÈç£º
+             * ä¾‹å¦‚ï¼š
              *     1010 1111
-             * ±ä³É£º
+             * å˜æˆï¼š
              *     0000 1111
              *
-             * ½á¹ûÊÇÊ®½øÖÆ 15£¬
-             * HEX_TABLE[15] ¾ÍÊÇ×Ö·û 'f'¡£
+             * ç»“æœæ˜¯åè¿›åˆ¶ 15ï¼Œ
+             * HEX_TABLE[15] å°±æ˜¯å­—ç¬¦ 'f'ã€‚
              */
             result[i * 2 + 1] =
                 HEX_TABLE[data[i] & 0x0F];
         }
 
         /*
-         * ·µ»Ø×ª»»ºóµÄÊ®Áù½øÖÆ×Ö·û´®¡£
+         * è¿”å›è½¬æ¢åçš„åå…­è¿›åˆ¶å­—ç¬¦ä¸²ã€‚
          */
         return result;
     }
 
     /*
-     * Éú³É°²È«µÄËæ»úµÇÂ¼ token¡£
+     * ç”Ÿæˆå®‰å…¨çš„éšæœºç™»å½• tokenã€‚
      *
-     * ²ÎÊı£º
-     *     outputToken£ºÓÃÀ´½ÓÊÕÉú³ÉºóµÄ token
+     * å‚æ•°ï¼š
+     *     outputTokenï¼šç”¨æ¥æ¥æ”¶ç”Ÿæˆåçš„ token
      *
-     * ·µ»Ø£º
-     *     true £ºÉú³É³É¹¦
-     *     false £ºÉú³ÉÊ§°Ü
+     * è¿”å›ï¼š
+     *     true ï¼šç”ŸæˆæˆåŠŸ
+     *     false ï¼šç”Ÿæˆå¤±è´¥
      */
     bool GenerateSecureLoginToken(
         std::string& outputToken
     )
     {
         /*
-         * ÏÈÇå¿Õµ÷ÓÃ·½´«ÈëµÄ×Ö·û´®¡£
+         * å…ˆæ¸…ç©ºè°ƒç”¨æ–¹ä¼ å…¥çš„å­—ç¬¦ä¸²ã€‚
          *
-         * ÕâÑù¼´Ê¹ºóÃæÉú³ÉÊ§°Ü£¬
-         * outputToken Ò²²»»á±£ÁôÖ®Ç°µÄ¾ÉÖµ¡£
+         * è¿™æ ·å³ä½¿åé¢ç”Ÿæˆå¤±è´¥ï¼Œ
+         * outputToken ä¹Ÿä¸ä¼šä¿ç•™ä¹‹å‰çš„æ—§å€¼ã€‚
          */
         outputToken.clear();
 
         /*
-         * ´´½¨Ò»¸ö³¤¶ÈÎª 32 ×Ö½ÚµÄ¹Ì¶¨Êı×é¡£
+         * åˆ›å»ºä¸€ä¸ªé•¿åº¦ä¸º 32 å­—èŠ‚çš„å›ºå®šæ•°ç»„ã€‚
          *
-         * unsigned char Í¨³£ÕıºÃÕ¼Ò»¸ö×Ö½Ú£¬
-         * ºÜÊÊºÏ±£´æÔ­Ê¼¶ş½øÖÆËæ»úÊı¾İ¡£
+         * unsigned char é€šå¸¸æ­£å¥½å ä¸€ä¸ªå­—èŠ‚ï¼Œ
+         * å¾ˆé€‚åˆä¿å­˜åŸå§‹äºŒè¿›åˆ¶éšæœºæ•°æ®ã€‚
          *
-         * bytes{} ±íÊ¾½«Êı×é³õÊ¼»¯ÎªÈ« 0¡£
+         * bytes{} è¡¨ç¤ºå°†æ•°ç»„åˆå§‹åŒ–ä¸ºå…¨ 0ã€‚
          */
         std::array<
             unsigned char,
@@ -195,16 +196,16 @@ namespace
         > bytes{};
 
         /*
-         * Ê¹ÓÃ OpenSSL Éú³É°²È«Ëæ»úÊı¾İ¡£
+         * ä½¿ç”¨ OpenSSL ç”Ÿæˆå®‰å…¨éšæœºæ•°æ®ã€‚
          *
-         * bytes.data()£º
-         *     ·µ»ØÊı×éÊ×µØÖ·£¬RAND_bytes »á°ÑËæ»úÊı¾İĞ´ÈëÕâÀï¡£
+         * bytes.data()ï¼š
+         *     è¿”å›æ•°ç»„é¦–åœ°å€ï¼ŒRAND_bytes ä¼šæŠŠéšæœºæ•°æ®å†™å…¥è¿™é‡Œã€‚
          *
-         * bytes.size()£º
-         *     ·µ»ØÊı×é³¤¶È£¬Ò²¾ÍÊÇ 32¡£
+         * bytes.size()ï¼š
+         *     è¿”å›æ•°ç»„é•¿åº¦ï¼Œä¹Ÿå°±æ˜¯ 32ã€‚
          *
-         * RAND_bytes ³É¹¦Ê±·µ»Ø 1£¬
-         * Ê§°ÜÊ±·µ»ØÆäËûÖµ¡£
+         * RAND_bytes æˆåŠŸæ—¶è¿”å› 1ï¼Œ
+         * å¤±è´¥æ—¶è¿”å›å…¶ä»–å€¼ã€‚
          */
         if (RAND_bytes(
             bytes.data(),
@@ -212,20 +213,20 @@ namespace
         ) != 1)
         {
             /*
-             * °²È«Ëæ»úÊıÉú³ÉÊ§°Ü¡£
+             * å®‰å…¨éšæœºæ•°ç”Ÿæˆå¤±è´¥ã€‚
              */
             return false;
         }
 
         /*
-         * ÏÖÔÚ bytes ÖĞÊÇ 32 ×Ö½Ú¶ş½øÖÆËæ»úÊı¾İ¡£
+         * ç°åœ¨ bytes ä¸­æ˜¯ 32 å­—èŠ‚äºŒè¿›åˆ¶éšæœºæ•°æ®ã€‚
          *
-         * ÀıÈçÆäÖĞ¿ÉÄÜ°üº¬£º
-         *     0xA2¡¢0x00¡¢0xFF µÈÊı¾İ¡£
+         * ä¾‹å¦‚å…¶ä¸­å¯èƒ½åŒ…å«ï¼š
+         *     0xA2ã€0x00ã€0xFF ç­‰æ•°æ®ã€‚
          *
-         * ½«Ëü×ª»»³É¿É´òÓ¡µÄÊ®Áù½øÖÆ×Ö·û´®¡£
+         * å°†å®ƒè½¬æ¢æˆå¯æ‰“å°çš„åå…­è¿›åˆ¶å­—ç¬¦ä¸²ã€‚
          *
-         * 32 ×Ö½Ú×îÖÕ»áµÃµ½ 64 ×Ö·û token¡£
+         * 32 å­—èŠ‚æœ€ç»ˆä¼šå¾—åˆ° 64 å­—ç¬¦ tokenã€‚
          */
         outputToken = HexEncode(
             bytes.data(),
@@ -233,7 +234,7 @@ namespace
         );
 
         /*
-         * token Éú³É³É¹¦¡£
+         * token ç”ŸæˆæˆåŠŸã€‚
          */
         return true;
     }
@@ -279,10 +280,10 @@ return 1
     RedisReplyMgr reply;
 
     /*  EVAL
-    *   Lua½Å±¾
-    *   1¸öRedis key
+    *   Luaè„šæœ¬
+    *   1ä¸ªRedis key
     *   key
-    *    ÓÃ»§ÊäÈëµÄÑéÖ¤Âë
+    *    ç”¨æˆ·è¾“å…¥çš„éªŒè¯ç 
     */
     reply = reinterpret_cast<redisReply*>(
         redisCommand(
@@ -378,8 +379,8 @@ std::string RedisMgr::CreateLoginSession(
     const std::string deviceIdText = std::to_string(deviceId);
 
     /*
-     * HSET Óë EXPIRE ÔÚÍ¬Ò»¸ö Lua ½Å±¾ÖĞÖ´ĞĞ£¬±ÜÃâÖ»Ğ´Èë Hash
-     * È´Ã»ÓĞÉèÖÃ TTL µÄ°ëÍê³É×´Ì¬¡£
+     * HSET ä¸ EXPIRE åœ¨åŒä¸€ä¸ª Lua è„šæœ¬ä¸­æ‰§è¡Œï¼Œé¿å…åªå†™å…¥ Hash
+     * å´æ²¡æœ‰è®¾ç½® TTL çš„åŠå®ŒæˆçŠ¶æ€ã€‚
      */
     static const std::string luaScript = R"lua(
 local ttl = tonumber(ARGV[6])
@@ -482,18 +483,19 @@ return 1
         return "";
     }
 
-    // Redis Ğ´Èë³É¹¦ºó£¬²ÅÏòµ÷ÓÃ·½·µ»Ø token¡£
+    // Redis å†™å…¥æˆåŠŸåï¼Œæ‰å‘è°ƒç”¨æ–¹è¿”å› tokenã€‚
     return generatedToken;
 
 }
-bool RedisMgr::VerifyLoginSession(
+
+std::optional<LoginSessionInfo> RedisMgr::VerifyLoginSession(
     std::uint64_t uid,
     std::uint64_t deviceId,
     const std::string& token,
     const std::string& serverId)
 {
     if (uid == 0 || deviceId == 0 || token.empty() || serverId.empty())
-        return false;
+        return std::nullopt;
 
     const std::string redisKey = MakeLoginSessionKey(uid, deviceId);
     const std::string uidText = std::to_string(uid);
@@ -501,20 +503,21 @@ bool RedisMgr::VerifyLoginSession(
 
     static const std::string luaScript = R"lua(
 local values = redis.call("HMGET", KEYS[1],
-    "uid", "token", "server_id", "device_id")
+    "uid", "token", "server_id", "device_id", "email")
 if values[1] == ARGV[1] and
    values[2] == ARGV[2] and
    values[3] == ARGV[3] and
-   values[4] == ARGV[4] then
-    return 1
+   values[4] == ARGV[4] and
+   values[5] then
+    return values[5]
 end
-return 0
+return false
 )lua";
 
     RedisConGuard guard(RedisPool::GetInstance()->BorrowConnect());
     auto* connection = guard.get();
     if (!connection)
-        return false;
+        return std::nullopt;
 
     RedisReplyMgr reply(reinterpret_cast<redisReply*>(redisCommand(
         connection,
@@ -526,10 +529,19 @@ return 0
         serverId.data(), static_cast<std::size_t>(serverId.size()),
         deviceIdText.data(), static_cast<std::size_t>(deviceIdText.size()))));
 
-    if (!reply || reply->type != REDIS_REPLY_INTEGER)
-        return false;
+    if (!reply || reply->type != REDIS_REPLY_STRING ||
+        reply->str == nullptr || reply->len == 0)
+    {
+        return std::nullopt;
+    }
 
-    return reply->integer == 1;
+    LoginSessionInfo session;
+    session.uid = uid;
+    session.device_id = deviceId;
+    session.email.assign(reply->str, reply->len);
+    session.server_id = serverId;
+
+    return session;
 }
 
 bool RedisMgr::Connect(const std::string& host, int port)
@@ -544,96 +556,29 @@ bool RedisMgr::Connect(const std::string& host, int port)
     return true;
 }
 
-bool RedisMgr::Get(
-    const std::string& key,
-    std::string& value)
+bool RedisMgr::Get(const std::string& key, std::string& value)
 {
-    value.clear();
-
-    RedisConGuard guard(
-        RedisPool::GetInstance()->BorrowConnect());
-
-    auto* connection = guard.get();
-
-    if (!connection)
+    RedisConGuard guard(RedisPool::GetInstance()->BorrowConnect());
+    auto* connect_ = guard.get();
+    if (!connect_)
     {
-        std::cerr
-            << "[RedisMgr::Get] no available Redis connection"
-            << ", key=" << key
-            << std::endl;
-
+        std::cout << "[Get " << key << "] failed, no available connection" << std::endl;
         return false;
     }
 
     RedisReplyMgr reply;
-
-    reply = reinterpret_cast<redisReply*>(
-        redisCommand(
-            connection,
-            "GET %b",
-            key.data(),
-            static_cast<std::size_t>(key.size())
-        )
-        );
-
+    reply = (redisReply*)redisCommand(connect_, "GET %s", key.c_str());
     if (!reply)
     {
-        std::cerr
-            << "[RedisMgr::Get] Redis returned no reply"
-            << ", key=" << key
-            << std::endl;
-
+        std::cout << "[Get " << key << "] failed" << std::endl;
         return false;
     }
-
-    if (reply->type == REDIS_REPLY_NIL)
-    {
-        std::cerr
-            << "[RedisMgr::Get] key does not exist"
-            << ", key=" << key
-            << std::endl;
-
-        return false;
-    }
-
-    if (reply->type == REDIS_REPLY_ERROR)
-    {
-        std::cerr
-            << "[RedisMgr::Get] Redis error"
-            << ", key=" << key
-            << ", message="
-            << (reply->str ? reply->str : "unknown")
-            << std::endl;
-
-        return false;
-    }
-
     if (reply->type != REDIS_REPLY_STRING)
     {
-        std::cerr
-            << "[RedisMgr::Get] unexpected reply type="
-            << reply->type
-            << ", key=" << key
-            << std::endl;
-
+        std::cout << "[Get " << key << "] failed, type is not string" << std::endl;
         return false;
     }
-
-    if (reply->str == nullptr)
-    {
-        std::cerr
-            << "[RedisMgr::Get] reply string is null"
-            << ", key=" << key
-            << std::endl;
-
-        return false;
-    }
-
-    value.assign(
-        reply->str,
-        static_cast<std::size_t>(reply->len)
-    );
-
+    value = reply->str;
     return true;
 }
 

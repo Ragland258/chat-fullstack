@@ -16,6 +16,7 @@ Port = 6379
 Host = localhost
 password = replace_with_redis_password
 size = 10
+TTL = 3600
 
 [Mysql]
 Host = replace_with_mysql_host

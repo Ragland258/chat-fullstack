@@ -55,6 +55,33 @@ target_link_libraries(chat PRIVATE
     Qt${QT_VERSION_MAJOR}::Network
 )
 
+# Make the Windows build directory directly runnable outside Qt Creator.
+if(WIN32)
+    get_target_property(
+        QT_QMAKE_EXECUTABLE
+        Qt${QT_VERSION_MAJOR}::qmake
+        IMPORTED_LOCATION
+    )
+    get_filename_component(QT_BIN_DIRECTORY "${QT_QMAKE_EXECUTABLE}" DIRECTORY)
+    find_program(
+        WINDEPLOYQT_EXECUTABLE
+        windeployqt
+        HINTS "${QT_BIN_DIRECTORY}"
+    )
+
+    if(WINDEPLOYQT_EXECUTABLE)
+        add_custom_command(TARGET chat POST_BUILD
+            COMMAND "${WINDEPLOYQT_EXECUTABLE}"
+                --compiler-runtime
+                --no-translations
+                "$<TARGET_FILE:chat>"
+            COMMENT "Deploying Qt runtime next to chat.exe"
+        )
+    else()
+        message(WARNING "windeployqt was not found; chat.exe may not run outside Qt Creator.")
+    endif()
+endif()
+
 if(${QT_VERSION} VERSION_LESS 6.1.0)
     set(BUNDLE_ID_OPTION MACOSX_BUNDLE_GUI_IDENTIFIER com.example.chat)
 endif()
