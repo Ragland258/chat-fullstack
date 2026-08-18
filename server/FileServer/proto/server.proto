@@ -1,0 +1,145 @@
+syntax = "proto3";
+
+package fileserver.v1;
+
+service FileService {
+    // 初始化上传，获得 MinIO 预签名上传 URL
+    rpc InitUpload(InitUploadReq)
+        returns (InitUploadRsp);
+
+    // 客户端上传完成后，通知 FileServer 检查文件
+    rpc CompleteUpload(CompleteUploadReq)
+        returns (CompleteUploadRsp);
+
+    // 获取短期有效的下载 URL
+    rpc GetDownloadUrl(GetDownloadUrlReq)
+        returns (GetDownloadUrlRsp);
+}
+
+// 文件用途
+enum FilePurpose {
+    FILE_PURPOSE_UNSPECIFIED     = 0;
+    FILE_PURPOSE_AVATAR          = 1;
+    FILE_PURPOSE_USER_BACKGROUND = 2;
+    FILE_PURPOSE_CHAT_IMAGE      = 3;
+    FILE_PURPOSE_CHAT_VIDEO      = 4;
+    FILE_PURPOSE_CHAT_AUDIO      = 5;
+    FILE_PURPOSE_CHAT_FILE       = 6;
+}
+
+// 文件状态
+enum FileStatus {
+    FILE_STATUS_UNSPECIFIED = 0;
+    FILE_STATUS_PENDING     = 1; // 已初始化，等待上传
+    FILE_STATUS_READY       = 2; // 上传完成，可以使用
+    FILE_STATUS_FAILED      = 3;
+}
+
+// 业务结果码
+enum FileResultCode {
+    FILE_RESULT_OK              = 0;
+    FILE_RESULT_INVALID_REQUEST = 1;
+    FILE_RESULT_UNAUTHORIZED    = 2;
+    FILE_RESULT_NOT_FOUND       = 3;
+    FILE_RESULT_SIZE_MISMATCH   = 4;
+    FILE_RESULT_UPLOAD_EXPIRED  = 5;
+    FILE_RESULT_INTERNAL_ERROR  = 6;
+}
+
+message FileResult {
+    FileResultCode code = 1;
+    string message = 2;
+}
+
+// 文件的稳定信息，可以保存进聊天消息
+message FileMetadata {
+    string file_id = 1;
+
+    uint64 uploader_id = 2;
+    uint64 conversation_id = 3;
+
+    string file_name = 4;
+    string content_type = 5;
+    uint64 size_bytes = 6;
+    string sha256 = 7;
+
+    FilePurpose purpose = 8;
+    FileStatus status = 9;
+
+    int64 created_at_ms = 10;
+}
+
+// ==================== 初始化上传 ====================
+
+message InitUploadReq {
+    // 用于日志追踪
+    string request_id = 1;
+
+    // 用于防止客户端重复请求产生多个文件
+    string client_file_id = 2;
+
+    // 必须由 ChatServer 从登录态中取得，不能信任客户端填写
+    uint64 uploader_id = 3;
+
+    // 文件将发送到哪个会话
+    uint64 conversation_id = 4;
+
+    string file_name = 5;
+    string content_type = 6;
+    uint64 size_bytes = 7;
+    string sha256 = 8;
+
+    FilePurpose purpose = 9;
+}
+
+message InitUploadRsp {
+    FileResult result = 1;
+
+    // 后续 CompleteUpload 使用
+    string file_id = 2;
+
+    // 客户端使用 HTTP PUT 上传文件
+    string upload_url = 3;
+
+    // 上传时必须携带的 HTTP 请求头
+    map<string, string> upload_headers = 4;
+
+    int64 expires_at_ms = 5;
+}
+
+// ==================== 完成上传 ====================
+
+message CompleteUploadReq {
+    string request_id = 1;
+    uint64 uploader_id = 2;
+    string file_id = 3;
+
+    // MinIO 上传响应中的 ETag，可选
+    string etag = 4;
+}
+
+message CompleteUploadRsp {
+    FileResult result = 1;
+    FileMetadata file = 2;
+}
+
+// ==================== 下载文件 ====================
+
+message GetDownloadUrlReq {
+    string request_id = 1;
+
+    // FileServer 或调用方要检查该用户是否有权访问文件
+    uint64 requester_id = 2;
+
+    string file_id = 3;
+}
+
+message GetDownloadUrlRsp {
+    FileResult result = 1;
+
+    // 短期有效，不能存进数据库
+    string download_url = 2;
+    int64 expires_at_ms = 3;
+
+    FileMetadata file = 4;
+}

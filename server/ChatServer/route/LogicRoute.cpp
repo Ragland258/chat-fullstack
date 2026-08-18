@@ -1,7 +1,6 @@
 #include "LogicRoute.h"
 
 #include "ioLoop/Connection.h"
-#include "handler/ErrorHandler.h"
 #include "handler/RequestHandler.h"
 #include "handler/soloChatHandler.h"
 #include "handler/SearchHandler.h"
@@ -104,11 +103,7 @@ LogicRoute::LogicRoute()
 		std::make_unique<soloChatHandler>()
 	);
 
-	// 错误处理
-	RegisterHandler(
-		"error",
-		std::make_unique<ErrorHandler>()
-	);
+
 
 	// 查找用户
 	RegisterHandler(

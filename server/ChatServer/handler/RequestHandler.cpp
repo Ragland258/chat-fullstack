@@ -45,7 +45,7 @@ Json::Value RequestHandler::BuildJsonRsp(
     {
         root["data"] = std::move(data);
     }
-
+    
     Json::StreamWriterBuilder writer;
     writer["indentation"] = "";
 

@@ -1,0 +1,89 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="资源文件">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="minio">
+      <UniqueIdentifier>{ca0e944c-95a9-43e2-8bfd-7d1fa5200108}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="头文件">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="源文件">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ioLoop">
+      <UniqueIdentifier>{94ab5591-380b-42e0-a969-7532f045676b}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="main.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="minio\minioMgr.cpp">
+      <Filter>minio</Filter>
+    </ClCompile>
+    <ClCompile Include="generate\server.grpc.pb.cc">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="generate\server.pb.cc">
+      <Filter>资源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ConfigMgr.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="RpcServre.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="ioLoop\IOSPool.cpp">
+      <Filter>ioLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="ioLoop\Server.cpp">
+      <Filter>ioLoop</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="config.ini">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="proto\server.proto">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="generate_grpc.bat">
+      <Filter>资源文件</Filter>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="minio\minioMgr.h">
+      <Filter>minio</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\server.grpc.pb.h">
+      <Filter>资源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\server.pb.h">
+      <Filter>资源文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ConfigMgr.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="Singleton.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="const.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="RpcServre.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
+    <ClInclude Include="ioLoop\IOSPool.h">
+      <Filter>ioLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="ioLoop\Server.h">
+      <Filter>ioLoop</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

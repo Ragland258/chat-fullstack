@@ -1,0 +1,23 @@
+[
+  {
+    "Name": "新建配置文件",
+    "Projects": [
+      {
+        "Path": "server\\GateServer\\GateServer.vcxproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "server\\StatusServer\\StatusServer.vcxproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "server\\ChatServer\\ChatServer.vcxproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "server\\FileServer\\FileServer.vcxproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]

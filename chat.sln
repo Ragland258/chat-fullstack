@@ -8,6 +8,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "StatusServer", "server\Stat
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ChatServer", "server\ChatServer\ChatServer.vcxproj", "{86F99C27-1220-4DFD-8B58-216087E284BE}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FileServer", "server\FileServer\FileServer.vcxproj", "{0A1D0F9C-CB99-4961-8E8F-862EC2B1F5F8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -40,6 +42,14 @@ Global
 		{86F99C27-1220-4DFD-8B58-216087E284BE}.Release|Win32.Build.0 = Release|Win32
 		{86F99C27-1220-4DFD-8B58-216087E284BE}.Release|x64.ActiveCfg = Release|x64
 		{86F99C27-1220-4DFD-8B58-216087E284BE}.Release|x64.Build.0 = Release|x64
+		{0A1D0F9C-CB99-4961-8E8F-862EC2B1F5F8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{0A1D0F9C-CB99-4961-8E8F-862EC2B1F5F8}.Debug|Win32.Build.0 = Debug|Win32
+		{0A1D0F9C-CB99-4961-8E8F-862EC2B1F5F8}.Debug|x64.ActiveCfg = Debug|x64
+		{0A1D0F9C-CB99-4961-8E8F-862EC2B1F5F8}.Debug|x64.Build.0 = Debug|x64
+		{0A1D0F9C-CB99-4961-8E8F-862EC2B1F5F8}.Release|Win32.ActiveCfg = Release|Win32
+		{0A1D0F9C-CB99-4961-8E8F-862EC2B1F5F8}.Release|Win32.Build.0 = Release|Win32
+		{0A1D0F9C-CB99-4961-8E8F-862EC2B1F5F8}.Release|x64.ActiveCfg = Release|x64
+		{0A1D0F9C-CB99-4961-8E8F-862EC2B1F5F8}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

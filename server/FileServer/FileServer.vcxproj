@@ -21,10 +21,9 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{86f99c27-1220-4dfd-8b58-216087e284be}</ProjectGuid>
-    <RootNamespace>ChatServer</RootNamespace>
+    <ProjectGuid>{0a1d0f9c-cb99-4961-8e8f-862ec2b1f5f8}</ProjectGuid>
+    <RootNamespace>FileServer</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
-    <VcpkgAutoLink>true</VcpkgAutoLink>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -75,8 +74,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)generate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4996;4251;4267;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -92,8 +92,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)generate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4996;4251;4267;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>WIN32;_WIN32_WINNT=0x0A00;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -107,8 +108,9 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)generate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4996;4251;4267;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -124,8 +126,9 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir);$(ProjectDir)generate;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <DisableSpecificWarnings>4996;4251;4267;4819;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -136,47 +139,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ConfigMgr.cpp" />
+    <ClCompile Include="generate\server.grpc.pb.cc" />
+    <ClCompile Include="generate\server.pb.cc" />
+    <ClCompile Include="ioLoop\IOSPool.cpp" />
+    <ClCompile Include="ioLoop\Server.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="minio\minioMgr.cpp" />
+    <ClCompile Include="RpcServre.cpp" />
+  </ItemGroup>
+  <ItemGroup>
     <ClInclude Include="ConfigMgr.h" />
     <ClInclude Include="const.h" />
-    <ClInclude Include="handler\Message.h" />
-    <ClInclude Include="handler\SearchHandler.h" />
-    <ClInclude Include="ioLoop\Connection.h" />
-    <ClInclude Include="ioLoop\ConnectionMgr.h" />
-    <ClInclude Include="ioLoop\WebSocketServer.h" />
-    <ClInclude Include="IOSPool.h" />
-    <ClInclude Include="mysql\MysqlDao.h" />
-    <ClInclude Include="mysql\MysqlMgr.h" />
-    <ClInclude Include="redis\RedisMgr.h" />
-    <ClInclude Include="route\LogicRoute.h" />
-    <ClInclude Include="handler\RequestHandler.h" />
-    <ClInclude Include="handler\soloChatHandler.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="grpc\rpc.h" />
+    <ClInclude Include="generate\server.grpc.pb.h" />
+    <ClInclude Include="generate\server.pb.h" />
+    <ClInclude Include="ioLoop\IOSPool.h" />
+    <ClInclude Include="ioLoop\Server.h" />
+    <ClInclude Include="minio\minioMgr.h" />
+    <ClInclude Include="RpcServre.h" />
     <ClInclude Include="Singleton.h" />
-    <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ConfigMgr.cpp" />
-    <ClCompile Include="handler\Message.cpp" />
-    <ClCompile Include="handler\RequestHandler.cpp" />
-    <ClCompile Include="handler\SearchHandler.cpp" />
-    <ClCompile Include="ioLoop\Connection.cpp" />
-    <ClCompile Include="ioLoop\ConnectionMgr.cpp" />
-    <ClCompile Include="ioLoop\WebSocketServer.cpp" />
-    <ClCompile Include="IOSPool.cpp" />
-    <ClCompile Include="mysql\MysqlDao.cpp" />
-    <ClCompile Include="mysql\MysqlMgr.cpp" />
-    <ClCompile Include="redis\RedisMgr.cpp" />
-    <ClCompile Include="route\LogicRoute.cpp" />
-    <ClCompile Include="handler\soloChatHandler.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="grpc\rpc.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="ChatServer.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="config.ini.example" />
+    <None Include="config.ini" />
+    <None Include="generate_grpc.bat" />
+    <None Include="proto\server.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
