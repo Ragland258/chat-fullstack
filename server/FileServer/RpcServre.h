@@ -4,6 +4,8 @@
 #include "generate/server.grpc.pb.h"
 #include "const.h"
 
+#include <string>
+#include <string_view>
 
 using grpc::Server;
 using grpc::ServerBuilder;
@@ -17,36 +19,31 @@ class RpcServreImpl : public FileService::Service
 public:
 	RpcServreImpl();
 
-	// ³õÊ¼»¯ÉÏ´« Éú³Éfile_id,²¢ÇÒ·µ»ØminioÔ¤Ç©ÃûÉÏ´«url
+	// æ ¡éªŒä¸Šä¼ è¯·æ±‚ï¼Œè¿”å›å¯¹è±¡é”®å’Œ MinIO é¢„ç­¾å PUT URLã€‚
 	grpc::Status InitUpload(
-		::grpc::ServerContext* context, const ::fileserver::v1::InitUploadReq*request, 
-		::fileserver::v1::InitUploadRsp* response
-	)override;
+		::grpc::ServerContext* context,
+		const ::fileserver::v1::InitUploadReq* request,
+		::fileserver::v1::InitUploadRsp* response) override;
 
-	// Íê³ÉÉÏ´«: ¿Í»§¶ËÉÏ´«Íê³Éºó,Ğ§Ñé²¢±ê¼ÇÎÄ¼ş¿ÉÓÃ
+	// å®¢æˆ·ç«¯ä¸Šä¼ å®Œæˆåï¼Œå‘ MinIO æŸ¥è¯¢å¹¶ç¡®è®¤æ–‡ä»¶å¯ç”¨ã€‚
 	Status CompleteUpload(
 		ServerContext* context,
 		const CompleteUploadReq* request,
-		CompleteUploadRsp* response
-	)override;
+		CompleteUploadRsp* response) override;
 
-	// »ñÈ¡ÏÂÔØurl:·µ»Ø¶ÌÆÚÓĞĞ§µÄÏÂÔØµØÖ·
+	// æ ¡éªŒè®¿é—®æƒé™åï¼Œè¿”å›çŸ­æœŸæœ‰æ•ˆçš„é¢„ç­¾å GET URLã€‚
 	Status GetDownloadUrl(
 		ServerContext* context,
 		const GetDownloadUrlReq* request,
-		GetDownloadUrlRsp* response
-	)override;
+		GetDownloadUrlRsp* response) override;
 
 private:
-	
-	//
+	// ç”Ÿæˆä¸åŒ…å«ç”¨æˆ·è¾“å…¥çš„éšæœº UUIDï¼Œç”¨äºæ„é€ å¯¹è±¡é”®ã€‚
 	std::string GenerateFileId();
-
 
 	void FillResult(
 		FileResult* result,
 		FileResultCode code,
-		const std::string_view message
-	);
+		const std::string_view message);
 };
 
