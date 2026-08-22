@@ -27,6 +27,7 @@
 using std::string;
 using std::unique_ptr;
 using std::shared_ptr;
+using std::string_view;
 
 namespace asio = boost::asio;
 namespace beast = boost::beast;
@@ -51,5 +52,8 @@ enum class ErrorCode
 	Mysql_Result_Error = 2012,
 
 	//redis
+
+
+	//minIO
 
 };
