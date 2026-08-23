@@ -2,6 +2,7 @@
 #include <algorithm>
 #include <boost/dll/runtime_symbol_info.hpp>
 #include <cctype>
+#include <stdexcept>
 #include <vector>
 
 namespace
@@ -29,7 +30,13 @@ namespace
 
 ConfigMgr::ConfigMgr()
 {
-    LoadConfig("config.ini");
+    // 使用服务独立配置名，避免联合启动时被其他项目覆盖。
+    if (!LoadIniFile("StatusServer.ini"))
+    {
+        throw std::runtime_error(
+            "failed to load StatusServer.ini");
+    }
+
     PrintConfig();
 }
 
@@ -65,7 +72,7 @@ void ConfigMgr::PrintConfig()
     }
 }
 
-bool ConfigMgr::LoadConfig(const std::string& config)
+bool ConfigMgr::LoadIniFile(const std::string& config)
 {
     try
     {

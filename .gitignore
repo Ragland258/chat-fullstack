@@ -31,6 +31,7 @@ build/
 
 # Local secrets and runtime configuration
 config.ini
+*Server.ini
 server/*/config.json
 .env
 .env.*

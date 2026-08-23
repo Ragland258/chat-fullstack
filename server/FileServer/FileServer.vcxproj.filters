@@ -47,7 +47,10 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="config.ini">
+    <None Include="FileServer.ini">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="FileServer.ini.example">
       <Filter>资源文件</Filter>
     </None>
     <None Include="proto\server.proto">

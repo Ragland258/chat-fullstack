@@ -46,7 +46,7 @@ public:
 
 private:
 	ConfigMgr();
-	bool LoadConfig(const std::string& config);
+	bool LoadIniFile(const std::string& config);
 	void PrintConfig();
 private:
 	std::map<std::string, SectionInfo> config_map_;

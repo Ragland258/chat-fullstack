@@ -20,7 +20,7 @@ chat/
 │   ├── consume_verify_code.lua
 │   └── 验证码Lua并发测试脚本/
 ├── docs/                 # bug 报告、变更日志
-└── config / build 说明见各服务 README 与 config.ini.example
+└── config / build 说明见各服务 README 与 `*Server.ini.example`
 ```
 
 ## 构建与启动
@@ -37,7 +37,15 @@ cmake -S . -B build && cmake --build build
 ### GateServer / StatusServer / ChatServer（C++）
 
 1. 用 Visual Studio 2022 打开根目录 `chat.sln`，可在同一解决方案中看到 GateServer、StatusServer 和 ChatServer（也可分别打开各服务自己的 `.sln`）
-2. 每个服务目录下先把 `config.ini.example` 复制为 `config.ini` 并填入 MySQL / Redis 等配置
+2. 为每个服务创建独立配置，并按需填写 MySQL、Redis、MinIO 等连接信息：
+
+   ```powershell
+   Copy-Item server/GateServer/GateServer.ini.example server/GateServer/GateServer.ini
+   Copy-Item server/StatusServer/StatusServer.ini.example server/StatusServer/StatusServer.ini
+   Copy-Item server/ChatServer/ChatServer.ini.example server/ChatServer/ChatServer.ini
+   Copy-Item server/FileServer/FileServer.ini.example server/FileServer/FileServer.ini
+   ```
+
 3. 修改 `proto/message.proto` 后，运行 `scripts/generate_grpc.bat` 重新生成代码
 
 ### VerifyServer（Node.js）
@@ -51,4 +59,4 @@ npm run server
 
 ## 配置说明
 
-各服务的 `config.ini` / `config.json` 属于本地运行时配置，已被 `.gitignore` 忽略；提交时只保留 `*.example` 模板。
+各 C++ 服务的 `*Server.ini` 以及 VerifyServer 的 `config.json` 属于本地运行时配置，已被 `.gitignore` 忽略；提交时只保留 `*.example` 模板。

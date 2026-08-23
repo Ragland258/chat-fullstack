@@ -51,6 +51,8 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <!-- 禁止 vcpkg 把全部库加入链接输入，避免 grpc.lib 触发 LNK1000。 -->
+    <VcpkgAutoLink>false</VcpkgAutoLink>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -114,7 +116,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>if exist "$(ProjectDir)config.ini" copy /Y "$(ProjectDir)config.ini" "$(OutDir)config.ini" &gt;nul</Command>
+      <Command>if exist "$(ProjectDir)StatusServer.ini" copy /Y "$(ProjectDir)StatusServer.ini" "$(OutDir)StatusServer.ini" &gt;nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -131,13 +133,18 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- StatusServer 使用非 TLS gRPC、Redis 和 OpenSSL 随机数。 -->
+      <AdditionalDependencies>hiredis.lib;grpc++_unsecure.lib;grpc_unsecure.lib;gpr.lib;address_sorting.lib;cares.lib;libprotobuf.lib;libupb.lib;upb_*.lib;utf8_range.lib;utf8_validity.lib;re2.lib;z.lib;abseil_dll.lib;absl_borrowed_fixup_buffer.lib;absl_decode_rust_punycode.lib;absl_demangle_rust.lib;absl_flags_commandlineflag.lib;absl_flags_commandlineflag_internal.lib;absl_flags_config.lib;absl_flags_internal.lib;absl_flags_marshalling.lib;absl_flags_parse.lib;absl_flags_private_handle_accessor.lib;absl_flags_program_name.lib;absl_flags_reflection.lib;absl_flags_usage.lib;absl_flags_usage_internal.lib;absl_generic_printer_internal.lib;absl_hashtable_profiler.lib;absl_log_flags.lib;absl_log_internal_structured_proto.lib;absl_poison.lib;absl_profile_builder.lib;absl_random_internal_entropy_pool.lib;absl_tracing_internal.lib;absl_utf8_for_code_point.lib;libcrypto.lib;wsock32.lib;ws2_32.lib;crypt32.lib;gdi32.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>if exist "$(ProjectDir)config.ini" copy /Y "$(ProjectDir)config.ini" "$(OutDir)config.ini" &gt;nul</Command>
+      <Command>if exist "$(ProjectDir)StatusServer.ini" copy /Y "$(ProjectDir)StatusServer.ini" "$(OutDir)StatusServer.ini" &gt;nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConfigMgr.cpp" />
+    <ClCompile Include="ConfigMgr.cpp">
+      <!-- 配置管理器使用 UTF-8 注释；仅设置此文件，兼容项目中的旧编码源码。 -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="message.grpc.pb.cc" />
     <ClCompile Include="message.pb.cc" />
@@ -154,7 +161,8 @@
     <ClInclude Include="StatusServiceImpl.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="config.ini" />
+    <None Include="StatusServer.ini" />
+    <None Include="StatusServer.ini.example" />
     <None Include="message.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

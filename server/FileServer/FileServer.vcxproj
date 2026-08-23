@@ -51,6 +51,8 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <!-- FileServer 只链接实际依赖，避免 vcpkg 全库输入中的 grpc.lib 触发 LNK1000。 -->
+    <VcpkgAutoLink>false</VcpkgAutoLink>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -136,7 +138,15 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <!-- MinIO 使用 CURL/OpenSSL；RPC 服务使用非 TLS gRPC。 -->
+      <AdditionalDependencies>miniocpp.lib;curlpp.lib;libcurl.lib;INIReader.lib;inih.lib;pugixml.lib;libssl.lib;libcrypto.lib;z.lib;grpc++_unsecure.lib;grpc_unsecure.lib;gpr.lib;address_sorting.lib;cares.lib;libprotobuf.lib;libupb.lib;upb_*.lib;utf8_range.lib;utf8_validity.lib;re2.lib;abseil_dll.lib;absl_borrowed_fixup_buffer.lib;absl_decode_rust_punycode.lib;absl_demangle_rust.lib;absl_flags_commandlineflag.lib;absl_flags_commandlineflag_internal.lib;absl_flags_config.lib;absl_flags_internal.lib;absl_flags_marshalling.lib;absl_flags_parse.lib;absl_flags_private_handle_accessor.lib;absl_flags_program_name.lib;absl_flags_reflection.lib;absl_flags_usage.lib;absl_flags_usage_internal.lib;absl_generic_printer_internal.lib;absl_hashtable_profiler.lib;absl_log_flags.lib;absl_log_internal_structured_proto.lib;absl_poison.lib;absl_profile_builder.lib;absl_random_internal_entropy_pool.lib;absl_tracing_internal.lib;absl_utf8_for_code_point.lib;wsock32.lib;ws2_32.lib;crypt32.lib;gdi32.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup>
+    <PostBuildEvent>
+      <Command>if exist "$(ProjectDir)FileServer.ini" copy /Y "$(ProjectDir)FileServer.ini" "$(OutDir)FileServer.ini" &gt;nul</Command>
+      <Message>Copying FileServer config to FileServer.ini</Message>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="ConfigMgr.cpp" />
@@ -160,7 +170,8 @@
     <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="config.ini" />
+    <None Include="FileServer.ini" />
+    <None Include="FileServer.ini.example" />
     <None Include="generate_grpc.bat" />
     <None Include="proto\server.proto" />
   </ItemGroup>

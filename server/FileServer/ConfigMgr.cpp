@@ -5,6 +5,7 @@
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <cctype>
+#include <stdexcept>
 #include <vector>
 
 namespace
@@ -32,7 +33,17 @@ namespace
 
 ConfigMgr::ConfigMgr()
 {
-    LoadConfig("config.ini");
+    /*
+     * 联合启动时多个服务会共用同一个输出目录。
+     * FileServer 使用独立文件名，避免其他服务的 config.ini
+     * 覆盖本服务配置后导致 [FileServer]/[Minio] 配置缺失。
+     */
+    if (!LoadIniFile("FileServer.ini"))
+    {
+        throw std::runtime_error(
+            "failed to load FileServer.ini");
+    }
+
     PrintConfig();
 }
 
@@ -68,7 +79,7 @@ void ConfigMgr::PrintConfig()
     }
 }
 
-bool ConfigMgr::LoadConfig(const std::string& config)
+bool ConfigMgr::LoadIniFile(const std::string& config)
 {
     try
     {

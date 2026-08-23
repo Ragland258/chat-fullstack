@@ -5,6 +5,7 @@
 #include <boost/property_tree/ini_parser.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <cctype>
+#include <stdexcept>
 #include <vector>
 
 namespace
@@ -32,7 +33,13 @@ namespace
 
 ConfigMgr::ConfigMgr()
 {
-    LoadConfig("config.ini");
+    // 配置加载失败时立即停止启动，避免后续把空字符串传给 stoi。
+    if (!LoadIniFile("ChatServer.ini"))
+    {
+        throw std::runtime_error(
+            "failed to load ChatServer.ini");
+    }
+
     PrintConfig();
 }
 
@@ -68,7 +75,7 @@ void ConfigMgr::PrintConfig()
     }
 }
 
-bool ConfigMgr::LoadConfig(const std::string& config)
+bool ConfigMgr::LoadIniFile(const std::string& config)
 {
     try
     {

@@ -1,8 +1,11 @@
 #include "ConfigMgr.h"
 #include <algorithm>
-#include <boost/dll/runtime_symbol_info.hpp>
 #include <cctype>
+#include <filesystem>
+#include <stdexcept>
 #include <vector>
+
+#include <Windows.h>
 
 namespace
 {
@@ -29,7 +32,13 @@ namespace
 
 ConfigMgr::ConfigMgr()
 {
-    LoadConfig("config.ini");
+    // Use a service-specific name to avoid multi-project config collisions.
+    if (!LoadIniFile("GateServer.ini"))
+    {
+        throw std::runtime_error(
+            "failed to load GateServer.ini");
+    }
+
     PrintConfig();
 }
 
@@ -65,25 +74,38 @@ void ConfigMgr::PrintConfig()
     }
 }
 
-bool ConfigMgr::LoadConfig(const std::string& config)
+bool ConfigMgr::LoadIniFile(const std::string& config)
 {
     try
     {
-        std::vector<boost::filesystem::path> config_paths;
+        /*
+         * 联合启动时各进程的工作目录不一定相同，因此优先从
+         * 当前 EXE 所在目录查找配置，而不是依赖工作目录。
+         */
+        std::wstring executable_buffer(32768, L'\0');
+        const DWORD executable_length = GetModuleFileNameW(
+            nullptr,
+            executable_buffer.data(),
+            static_cast<DWORD>(executable_buffer.size()));
 
-        boost::system::error_code location_error;
-        const boost::filesystem::path executable_path =
-            boost::dll::program_location(location_error);
-
-        if (!location_error)
+        if (executable_length == 0 ||
+            executable_length == executable_buffer.size())
         {
-            config_paths.push_back(
-                executable_path.parent_path() / config
-            );
+            throw std::runtime_error(
+                "failed to get GateServer executable path");
         }
 
-        const boost::filesystem::path current_config_path =
-            boost::filesystem::current_path() / config;
+        executable_buffer.resize(executable_length);
+
+        const std::filesystem::path executable_path(
+            executable_buffer);
+
+        std::vector<std::filesystem::path> config_paths;
+        config_paths.push_back(
+            executable_path.parent_path() / config);
+
+        const std::filesystem::path current_config_path =
+            std::filesystem::current_path() / config;
 
         if (config_paths.empty()
             || config_paths.front() != current_config_path)
@@ -91,11 +113,20 @@ bool ConfigMgr::LoadConfig(const std::string& config)
             config_paths.push_back(current_config_path);
         }
 
-        boost::filesystem::path config_path;
+        std::filesystem::path config_path;
 
         for (const auto& candidate : config_paths)
         {
-            if (boost::filesystem::is_regular_file(candidate))
+            std::cerr
+                << "[GateServer] checking config: "
+                << candidate.string()
+                << std::endl;
+
+            std::error_code file_error;
+
+            if (std::filesystem::is_regular_file(
+                    candidate,
+                    file_error))
             {
                 config_path = candidate;
                 break;
@@ -104,10 +135,10 @@ bool ConfigMgr::LoadConfig(const std::string& config)
 
         if (config_path.empty())
         {
-            std::cout << "Config file not found. Checked:" << std::endl;
+            std::cerr << "Config file not found. Checked:" << std::endl;
             for (const auto& candidate : config_paths)
             {
-                std::cout << "  " << candidate.string() << std::endl;
+                std::cerr << "  " << candidate.string() << std::endl;
             }
             return false;
         }
@@ -115,7 +146,7 @@ bool ConfigMgr::LoadConfig(const std::string& config)
         boost::property_tree::ptree pt;
         boost::property_tree::read_ini(config_path.string(), pt);
 
-        std::cout
+        std::cerr
             << "Loaded config: "
             << config_path.string()
             << std::endl;
@@ -144,7 +175,7 @@ bool ConfigMgr::LoadConfig(const std::string& config)
     }
     catch (const std::exception& e)
     {
-        std::cout << "LoadConfig failed: " << e.what() << std::endl;
+        std::cerr << "LoadConfig failed: " << e.what() << std::endl;
         return false;
     }
 }

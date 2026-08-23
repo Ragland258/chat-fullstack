@@ -24,7 +24,7 @@ public:
      * 第一次传入的 threadCount 有效；
      * 后面再次调用 instance(其他数量)，不会重新创建线程池。
      *
-     * 建议程序启动时先读取 config.ini：
+     * 建议程序启动时先读取 ChatServer.ini：
      *
      * ThreadPool::instance(threadCount);
      *

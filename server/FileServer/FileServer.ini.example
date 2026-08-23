@@ -1,0 +1,12 @@
+[FileServer]
+Host=127.0.0.1
+Port=50053
+
+[Minio]
+Endpoint=127.0.0.1:9100
+AccessKey=CHANGE_ME
+SecretKey=CHANGE_ME
+Bucket=chat-files
+Secure=false
+UploadUrlTTL=600
+DownloadUrlTTL=300

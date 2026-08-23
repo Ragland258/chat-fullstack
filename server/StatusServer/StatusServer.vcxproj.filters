@@ -54,7 +54,10 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="config.ini">
+    <None Include="StatusServer.ini">
+      <Filter>源文件</Filter>
+    </None>
+    <None Include="StatusServer.ini.example">
       <Filter>源文件</Filter>
     </None>
     <None Include="message.proto">

@@ -166,7 +166,10 @@
     <None Include="..\..\proto\message.proto">
       <Filter>资源文件</Filter>
     </None>
-    <None Include="config.ini">
+    <None Include="GateServer.ini">
+      <Filter>资源文件</Filter>
+    </None>
+    <None Include="GateServer.ini.example">
       <Filter>资源文件</Filter>
     </None>
     <None Include="..\..\scripts\consume_verify_code.lua">

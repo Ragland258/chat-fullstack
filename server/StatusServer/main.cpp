@@ -39,7 +39,7 @@ void runServer()
     /*
      * 读取 Status Server 配置。
      *
-     * config.ini 示例：
+     * StatusServer.ini 示例：
      *
      * [StatusServer]
      * Host=127.0.0.1

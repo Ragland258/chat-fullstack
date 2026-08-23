@@ -51,6 +51,8 @@
     <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>false</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
+    <!-- 不自动链接 vcpkg 目录中的全部库，避免 5 GB 输入触发 LNK1000。 -->
+    <VcpkgAutoLink>false</VcpkgAutoLink>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
   <ImportGroup Label="ExtensionSettings">
@@ -128,7 +130,7 @@
     </Link>
     <PostBuildEvent>
       <Command>if exist "D:\mysql-connector-c++-9.6.0-winx64\lib64\mysqlcppconn-10-vs14.dll" copy /Y "D:\mysql-connector-c++-9.6.0-winx64\lib64\mysqlcppconn-10-vs14.dll" "$(OutDir)" &gt;nul
-if exist "$(ProjectDir)config.ini" copy /Y "$(ProjectDir)config.ini" "$(OutDir)config.ini" &gt;nul</Command>
+if exist "$(ProjectDir)GateServer.ini" copy /Y "$(ProjectDir)GateServer.ini" "$(OutDir)GateServer.ini" &gt;nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -148,15 +150,19 @@ if exist "$(ProjectDir)config.ini" copy /Y "$(ProjectDir)config.ini" "$(OutDir)c
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <LinkIncremental>false</LinkIncremental>
       <AdditionalLibraryDirectories>D:\mysql-connector-c++-9.6.0-winx64\lib64\vs14;D:\download\windows-redis\msvs\hiredis\x64\Release;D:\download\windows-redis\src\Win32_Interop\x64\Release;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>mysqlcppconn.lib;hiredis.lib;Win32_Interop.lib;ws2_32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!-- 当前服务仅使用非 TLS gRPC，显式链接其实际依赖。 -->
+      <AdditionalDependencies>mysqlcppconn.lib;hiredis.lib;Win32_Interop.lib;grpc++_unsecure.lib;grpc_unsecure.lib;gpr.lib;address_sorting.lib;cares.lib;libprotobuf.lib;libupb.lib;upb_*.lib;utf8_range.lib;utf8_validity.lib;re2.lib;z.lib;abseil_dll.lib;absl_borrowed_fixup_buffer.lib;absl_decode_rust_punycode.lib;absl_demangle_rust.lib;absl_flags_commandlineflag.lib;absl_flags_commandlineflag_internal.lib;absl_flags_config.lib;absl_flags_internal.lib;absl_flags_marshalling.lib;absl_flags_parse.lib;absl_flags_private_handle_accessor.lib;absl_flags_program_name.lib;absl_flags_reflection.lib;absl_flags_usage.lib;absl_flags_usage_internal.lib;absl_generic_printer_internal.lib;absl_hashtable_profiler.lib;absl_log_flags.lib;absl_log_internal_structured_proto.lib;absl_poison.lib;absl_profile_builder.lib;absl_random_internal_entropy_pool.lib;absl_tracing_internal.lib;absl_utf8_for_code_point.lib;libsodium.lib;libcrypto.lib;wsock32.lib;ws2_32.lib;crypt32.lib;gdi32.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>if exist "D:\mysql-connector-c++-9.6.0-winx64\lib64\mysqlcppconn-10-vs14.dll" copy /Y "D:\mysql-connector-c++-9.6.0-winx64\lib64\mysqlcppconn-10-vs14.dll" "$(OutDir)" &gt;nul
-if exist "$(ProjectDir)config.ini" copy /Y "$(ProjectDir)config.ini" "$(OutDir)config.ini" &gt;nul</Command>
+if exist "$(ProjectDir)GateServer.ini" copy /Y "$(ProjectDir)GateServer.ini" "$(OutDir)GateServer.ini" &gt;nul</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ConfigMgr.cpp" />
+    <ClCompile Include="ConfigMgr.cpp">
+      <!-- 该文件包含 UTF-8 注释，只对它指定编码，避免影响项目里的旧 GBK 源文件。 -->
+      <AdditionalOptions>/utf-8 %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
     <ClCompile Include="IoLoop\HttpConnection.cpp" />
     <ClCompile Include="IoLoop\IOSPool.cpp" />
     <ClCompile Include="Work\Grpc\StatusGrpcClient.cpp" />
@@ -200,7 +206,8 @@ if exist "$(ProjectDir)config.ini" copy /Y "$(ProjectDir)config.ini" "$(OutDir)c
     <ClInclude Include="Work\Grpc\VerifyGrpcClient.h" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="config.ini" />
+    <None Include="GateServer.ini" />
+    <None Include="GateServer.ini.example" />
     <None Include="..\..\scripts\consume_verify_code.lua" />
     <None Include="..\..\scripts\generate_grpc.bat" />
     <None Include="..\..\proto\message.proto" />
