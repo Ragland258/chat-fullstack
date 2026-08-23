@@ -128,6 +128,8 @@
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>$(ProjectDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>/utf-8 /bigobj %(AdditionalOptions)</AdditionalOptions>
+      <!-- gRPC/Protobuf 1.81 的兼容头仍会触发弃用警告，不把第三方 C4996 当作项目错误。 -->
+      <DisableSpecificWarnings>4996;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <PreprocessorDefinitions>_WIN32_WINNT=0x0A00;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <LanguageStandard>stdcpplatest</LanguageStandard>
@@ -135,8 +137,11 @@
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <!-- ChatServer 使用 MySQL、Redis、JSON 和 OpenSSL 随机数。 -->
-      <AdditionalDependencies>mysqlcppconn.lib;hiredis.lib;jsoncpp.lib;libcrypto.lib;wsock32.lib;ws2_32.lib;crypt32.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <!--
+        ChatServer 使用 MySQL、Redis、JSON、OpenSSL 和非 TLS gRPC。
+        显式列出依赖可以避免 vcpkg 把全部库加入链接输入并再次触发 LNK1000。
+      -->
+      <AdditionalDependencies>mysqlcppconn.lib;hiredis.lib;jsoncpp.lib;grpc++_unsecure.lib;grpc_unsecure.lib;gpr.lib;address_sorting.lib;cares.lib;libprotobuf.lib;libupb.lib;upb_*.lib;utf8_range.lib;utf8_validity.lib;re2.lib;z.lib;abseil_dll.lib;absl_borrowed_fixup_buffer.lib;absl_decode_rust_punycode.lib;absl_demangle_rust.lib;absl_flags_commandlineflag.lib;absl_flags_commandlineflag_internal.lib;absl_flags_config.lib;absl_flags_internal.lib;absl_flags_marshalling.lib;absl_flags_parse.lib;absl_flags_private_handle_accessor.lib;absl_flags_program_name.lib;absl_flags_reflection.lib;absl_flags_usage.lib;absl_flags_usage_internal.lib;absl_generic_printer_internal.lib;absl_hashtable_profiler.lib;absl_log_flags.lib;absl_log_internal_structured_proto.lib;absl_poison.lib;absl_profile_builder.lib;absl_random_internal_entropy_pool.lib;absl_tracing_internal.lib;absl_utf8_for_code_point.lib;libcrypto.lib;wsock32.lib;ws2_32.lib;crypt32.lib;gdi32.lib;bcrypt.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup>
@@ -148,6 +153,9 @@
   <ItemGroup>
     <ClInclude Include="ConfigMgr.h" />
     <ClInclude Include="const.h" />
+    <ClInclude Include="generate\server.grpc.pb.h" />
+    <ClInclude Include="generate\server.pb.h" />
+    <ClInclude Include="grpc\RpcPool.h" />
     <ClInclude Include="handler\Message.h" />
     <ClInclude Include="handler\SearchHandler.h" />
     <ClInclude Include="ioLoop\Connection.h" />
@@ -161,12 +169,14 @@
     <ClInclude Include="handler\RequestHandler.h" />
     <ClInclude Include="handler\soloChatHandler.h" />
     <ClInclude Include="resource.h" />
-    <ClInclude Include="grpc\rpc.h" />
+    <ClInclude Include="grpc\FileGrpcClient.h" />
     <ClInclude Include="Singleton.h" />
     <ClInclude Include="ThreadPool.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ConfigMgr.cpp" />
+    <ClCompile Include="generate\server.grpc.pb.cc" />
+    <ClCompile Include="generate\server.pb.cc" />
     <ClCompile Include="handler\Message.cpp" />
     <ClCompile Include="handler\RequestHandler.cpp" />
     <ClCompile Include="handler\SearchHandler.cpp" />
@@ -180,7 +190,7 @@
     <ClCompile Include="route\LogicRoute.cpp" />
     <ClCompile Include="handler\soloChatHandler.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="grpc\rpc.cpp" />
+    <ClCompile Include="grpc\FileGrpcClient.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChatServer.rc" />
@@ -188,6 +198,7 @@
   <ItemGroup>
     <None Include="ChatServer.ini" />
     <None Include="ChatServer.ini.example" />
+    <None Include="proto\server.proto" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

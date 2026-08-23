@@ -152,21 +152,22 @@
     <ClCompile Include="ConfigMgr.cpp" />
     <ClCompile Include="generate\server.grpc.pb.cc" />
     <ClCompile Include="generate\server.pb.cc" />
+    <ClCompile Include="grpc\RpcServre.cpp" />
     <ClCompile Include="ioLoop\IOSPool.cpp" />
     <ClCompile Include="ioLoop\Server.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="minio\minioMgr.cpp" />
-    <ClCompile Include="RpcServre.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ConfigMgr.h" />
     <ClInclude Include="const.h" />
     <ClInclude Include="generate\server.grpc.pb.h" />
     <ClInclude Include="generate\server.pb.h" />
+    <ClInclude Include="grpc\RpcPool.h" />
+    <ClInclude Include="grpc\RpcServre.h" />
     <ClInclude Include="ioLoop\IOSPool.h" />
     <ClInclude Include="ioLoop\Server.h" />
     <ClInclude Include="minio\minioMgr.h" />
-    <ClInclude Include="RpcServre.h" />
     <ClInclude Include="Singleton.h" />
   </ItemGroup>
   <ItemGroup>

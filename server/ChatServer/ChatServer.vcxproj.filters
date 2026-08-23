@@ -3,6 +3,9 @@
   <ItemGroup>
     <None Include="ChatServer.ini" />
     <None Include="ChatServer.ini.example" />
+    <None Include="proto\server.proto">
+      <Filter>资源文件</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="ioLoop">
@@ -58,7 +61,7 @@
     <ClCompile Include="main.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="grpc\rpc.cpp">
+    <ClCompile Include="grpc\FileGrpcClient.cpp">
       <Filter>grpc</Filter>
     </ClCompile>
     <ClCompile Include="handler\RequestHandler.cpp">
@@ -82,6 +85,8 @@
     <ClCompile Include="handler\SearchHandler.cpp">
       <Filter>handler</Filter>
     </ClCompile>
+    <ClCompile Include="generate\server.grpc.pb.cc" />
+    <ClCompile Include="generate\server.pb.cc" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="const.h">
@@ -114,7 +119,7 @@
     <ClInclude Include="resource.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="grpc\rpc.h">
+    <ClInclude Include="grpc\FileGrpcClient.h">
       <Filter>grpc</Filter>
     </ClInclude>
     <ClInclude Include="ThreadPool.h">
@@ -138,6 +143,11 @@
     <ClInclude Include="handler\SearchHandler.h">
       <Filter>handler</Filter>
     </ClInclude>
+    <ClInclude Include="grpc\RpcPool.h">
+      <Filter>grpc</Filter>
+    </ClInclude>
+    <ClInclude Include="generate\server.grpc.pb.h" />
+    <ClInclude Include="generate\server.pb.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChatServer.rc">

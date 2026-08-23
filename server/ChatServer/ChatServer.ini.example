@@ -8,3 +8,8 @@ Host=127.0.0.1
 Port=6379
 password=
 size=10
+
+[FileServer]
+Host=127.0.0.1
+Port=50053
+PoolSize=4

@@ -19,6 +19,9 @@
     <Filter Include="ioLoop">
       <UniqueIdentifier>{94ab5591-380b-42e0-a969-7532f045676b}</UniqueIdentifier>
     </Filter>
+    <Filter Include="grpc">
+      <UniqueIdentifier>{283a4f51-5a5f-4595-aaf4-ec6086007eba}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -36,14 +39,14 @@
     <ClCompile Include="ConfigMgr.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
-    <ClCompile Include="RpcServre.cpp">
-      <Filter>源文件</Filter>
-    </ClCompile>
     <ClCompile Include="ioLoop\IOSPool.cpp">
       <Filter>ioLoop</Filter>
     </ClCompile>
     <ClCompile Include="ioLoop\Server.cpp">
       <Filter>ioLoop</Filter>
+    </ClCompile>
+    <ClCompile Include="grpc\RpcServre.cpp">
+      <Filter>grpc</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -79,14 +82,17 @@
     <ClInclude Include="const.h">
       <Filter>头文件</Filter>
     </ClInclude>
-    <ClInclude Include="RpcServre.h">
-      <Filter>头文件</Filter>
-    </ClInclude>
     <ClInclude Include="ioLoop\IOSPool.h">
       <Filter>ioLoop</Filter>
     </ClInclude>
     <ClInclude Include="ioLoop\Server.h">
       <Filter>ioLoop</Filter>
+    </ClInclude>
+    <ClInclude Include="grpc\RpcPool.h">
+      <Filter>grpc</Filter>
+    </ClInclude>
+    <ClInclude Include="grpc\RpcServre.h">
+      <Filter>grpc</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
