@@ -533,7 +533,7 @@ RegisterUserDbResult MysqlDao::RegisterUser(
     {
         std::unique_ptr<sql::PreparedStatement> statement(
             connection->prepareStatement(
-                "INSERT INTO users(name, email, pwd) "
+                "INSERT INTO users(name, email, password_hash) "
                 "VALUES (?, ?, ?)"
             )
         );
@@ -563,7 +563,7 @@ RegisterUserDbResult MysqlDao::RegisterUser(
             << exception.getSQLState()
             << '\n';
 
-        // 防止并发注册造成唯一索引冲突
+        // 闃叉骞跺彂娉ㄥ唽閫犳垚鍞竴绱㈠紩鍐茬獊
         if (exception.getErrorCode() == 1062)
         {
             return RegisterUserDbResult::UserAlreadyExists;
@@ -598,7 +598,7 @@ UserLoginQueryResult MysqlDao::GetUserLoginInfo(const std::string& email)
     {
         std::unique_ptr<sql::PreparedStatement> statement(
             connection->prepareStatement(
-                "SELECT uid, pwd "
+                "SELECT uid, password_hash "
                 "FROM users "
                 "WHERE email = ? "
                 "LIMIT 1"
@@ -613,7 +613,7 @@ UserLoginQueryResult MysqlDao::GetUserLoginInfo(const std::string& email)
 
         if (!result->next())
         {
-            // 邮箱对应的用户不存在
+            // 閭瀵瑰簲鐨勭敤鎴蜂笉瀛樺湪
             return {
                 RegisterUserDbResult::UserNotFound,
                 0,
@@ -625,7 +625,7 @@ UserLoginQueryResult MysqlDao::GetUserLoginInfo(const std::string& email)
             RegisterUserDbResult::Success,
             static_cast<std::uint64_t>(
                 result->getUInt64("uid")),
-            result->getString("pwd").asStdString()
+            result->getString("password_hash").asStdString()
         };
     }
     catch (const sql::SQLException& exception)

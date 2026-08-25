@@ -384,51 +384,82 @@ void Connection::AsyncAccept()
 				return;
 			}
 
-			// Redis 查询会阻塞，因此投递到工作线程。
-			std::weak_ptr<Connection> weakConn{ self };
+			/*
+			 * Redis 查询会阻塞，因此投递到工作线程，避免阻塞
+			 * WebSocket 所在的 I/O 线程。
+			 *
+			 * 这里必须让任务持有 shared_ptr self：当前连接尚未完成
+			 * WebSocket Upgrade，也还没有加入 ConnectionMgr。若只捕获
+			 * weak_ptr，读取回调结束后 Connection 可能立即析构，客户端
+			 * 就只能看到 socket hang up。
+			 */
 			ThreadPool::GetInstance()->commit(
-				[uid,
+				[self,
+				uid,
 				deviceId,
-				weakConn,
 				token = std::move(token),
 				serverId]() mutable
 				{
-					auto loginSession =
-						RedisMgr::GetInstance()->VerifyLoginSession
-					(
-						uid,
-						deviceId,
-						token,
-						serverId
-					);
+					try
+					{
+						auto loginSession =
+							RedisMgr::GetInstance()->VerifyLoginSession
+						(
+							uid,
+							deviceId,
+							token,
+							serverId
+						);
 
-					auto self = weakConn.lock();
-					if ( !self )
-						return;
+						/*
+						 * Redis 查询运行在线程池中；认证状态和 WebSocket
+						 * 操作仍然回到该连接的 executor 上串行执行。
+						 */
+						asio::post(
+							self->ws_->get_executor(),
+							[self, loginSession = std::move(loginSession)]() mutable
+							{
+								if ( !loginSession )
+								{
+									self->RejectHandShake(
+										http::status::unauthorized,
+										"Authentication failed"
+									);
+									return;
+								}
 
-					// 回到 WebSocket strand 后再修改 Connection 和发起升级。
-					asio::post(
-						self->ws_->get_executor(),
-						[self, loginSession = std::move(loginSession)]() mutable
-						{
-							if ( !loginSession )
+								AuthSession session;
+								session.device_id = loginSession->device_id;
+								session.uid = loginSession->uid;
+								session.email = std::move(loginSession->email);
+								self->BindSession(std::move(session));
+
+								self->AcceptUpgrade();
+							}
+						);
+					}
+					catch ( const std::exception& exception )
+					{
+						/*
+						 * commit() 返回的 future 在这里没有被保存，异常不会
+						 * 自动传播到 I/O 线程，因此必须在任务内部处理。
+						 */
+						std::cerr
+							<< "[WebSocket authentication] exception: "
+							<< exception.what()
+							<< std::endl;
+
+						asio::post(
+							self->ws_->get_executor(),
+							[self]()
 							{
 								self->RejectHandShake(
-									http::status::unauthorized,
-									"Authentication failed"
+									http::status::internal_server_error,
+									"Authentication service error"
 								);
-								return;
 							}
-
-							AuthSession session;
-							session.device_id = loginSession->device_id;
-							session.uid = loginSession->uid;
-							session.email = std::move(loginSession->email);
-							self->BindSession(std::move(session));
-
-							self->AcceptUpgrade();
-						}
-					);
+						);
+					}
 				}
 			);
 		});

@@ -90,6 +90,9 @@
     <ClCompile Include="handler\SetAvatarHandler.cpp">
       <Filter>handler</Filter>
     </ClCompile>
+    <ClCompile Include="redis\RedisFileMgr.cpp">
+      <Filter>Redis</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="const.h">
@@ -154,10 +157,11 @@
     <ClInclude Include="handler\SetAvatarHandler.h">
       <Filter>handler</Filter>
     </ClInclude>
+    <ClInclude Include="redis\RedisFileMgr.h">
+      <Filter>Redis</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="ChatServer.rc">
-      <Filter>资源文件</Filter>
-    </ResourceCompile>
+    <ResourceCompile Include="ChatServer.rc" />
   </ItemGroup>
 </Project>

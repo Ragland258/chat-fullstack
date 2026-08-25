@@ -25,7 +25,7 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 	if (!connection)
 		return;
 
-	// ÑéÖ¤json
+	// éªŒè¯json
 	if (!connection->IsAuthenticated() ||
 		connection->GetUserId() == 0)
 	{
@@ -45,8 +45,8 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 		json["request_id"].asString();
 
 	/*
-    * SetAvatarHandler ºóÐø»¹»á´¦Àí completeUpload£¬
-    * ËùÒÔÊ¹ÓÃ action Çø·ÖÉÏ´«½×¶Î¡£
+    * SetAvatarHandler åŽç»­è¿˜ä¼šå¤„ç† completeUploadï¼Œ
+    * æ‰€ä»¥ä½¿ç”¨ action åŒºåˆ†ä¸Šä¼ é˜¶æ®µã€‚
     */
 
 	if (!json.isMember("action") ||
@@ -85,7 +85,7 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 	const Json::Value& data =
 		json["data"];
 
-	// ÑéÖ¤ÎÄ¼þÃû
+	// éªŒè¯æ–‡ä»¶å
 	if (!data.isMember("file_name") ||
 		!data["file_name"].isString() ||
 		data["file_name"].asString().empty())
@@ -104,8 +104,8 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 	}
 
 	/*
-	* ÑéÖ¤ MIME ÀàÐÍ¡£
-	* FileServer »¹»áÔÙ´ÎÐ£Ñé£¬ÕâÀïÊÇÎªÁË¾¡Ôç¾Ü¾ø´íÎóÇëÇó¡£
+	* éªŒè¯ MIME ç±»åž‹ã€‚
+	* FileServer è¿˜ä¼šå†æ¬¡æ ¡éªŒï¼Œè¿™é‡Œæ˜¯ä¸ºäº†å°½æ—©æ‹’ç»é”™è¯¯è¯·æ±‚ã€‚
 	*/
 	if (!data.isMember("content_type") ||
 		!data["content_type"].isString() ||
@@ -124,7 +124,7 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 		return;
 	}
 
-	// ÑéÖ¤uint64,Í·Ïñ×î´ó5mb
+	// éªŒè¯uint64,å¤´åƒæœ€å¤§5mb
 	if (!data.isMember("size_bytes") ||
 		!data["size_bytes"].asUInt64() ||
 		data["size_bytes"].asUInt64() == 0)
@@ -142,14 +142,15 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 		return;
 	}
 
-	// ²»ÓÃÑéÖ¤¿Í»§¶Ë×Ö¶ÎÃû
+	// ä¸ç”¨éªŒè¯å®¢æˆ·ç«¯å­—æ®µå
 	string clientFileId;
 
 	const string fileName =
 		data["file_name"].asString();
 
-	const string ContentType =
-		data["conten_type"].asString();
+	// å­—æ®µåå¿…é¡»ä¸Ž WebSocket åè®®ä¸­çš„ content_type å®Œå…¨ä¸€è‡´ã€‚
+	const string contentType =
+		data["content_type"].asString();
 
 	const std::uint64_t sizeBytes =
 		data["size_bytes"].asUInt64();
@@ -157,11 +158,11 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 	if (data.isMember("client_file_id") &&
 		data["client_file_id"].isString())
 	{
-		// ²»ÓÃÑéÖ¤¿Í»§¶Ë×Ö¶ÎÃû
+		// ä¸ç”¨éªŒè¯å®¢æˆ·ç«¯å­—æ®µå
 		clientFileId =
 			data["client_file_id"].asString();
 	}
-	// uidÀ´×ÔÓÚconnection,
+	// uidæ¥è‡ªäºŽconnection,
 	const std::uint64_t uploaderId =
 		connection->GetUserId();
 
@@ -172,7 +173,7 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 		weakConn,
 		requestId,
 		clientFileId = std::move(clientFileId),
-		ContentType,
+		contentType,
 		fileName,
 		sizeBytes,
 		uploaderId]()
@@ -186,12 +187,12 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 				request.set_uploader_id(uploaderId);
 				request.set_file_name(fileName);
 				request.set_size_bytes(sizeBytes);
-				request.set_content_type(ContentType);
+				request.set_content_type(contentType);
 				request.set_purpose(
 					fileserver::v1::FILE_PURPOSE_AVATAR
 				);
 
-				// Í¬²½grpc
+				// åŒæ­¥grpc
 				InitUploadRpcResult rpc_result =
 					FileGrpcClient::GetInstance()->InitUpload(request);
 
@@ -201,7 +202,7 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 				if (!connection)
 					return;
 
-				// 1.ÅÐ¶Ïgrpc´«ÊäÊÇ·ñ³É¹¦
+				// 1.åˆ¤æ–­grpcä¼ è¾“æ˜¯å¦æˆåŠŸ
 				if (!rpc_result.TransportOk())
 				{
 					Json::Value response =
@@ -217,7 +218,7 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 					return;
 				}
 
-				// 2.ÅÐ¶Ïfile serverÒµÎñÊÇ·ñ³É¹¦
+				// 2.åˆ¤æ–­file serverä¸šåŠ¡æ˜¯å¦æˆåŠŸ
 				const auto& fileResponse =
 					rpc_result.response;
 				
@@ -250,7 +251,7 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 					return;
 				}
 
-				// 3.°Ñfile serverµÄÉÏ´«ÐÅÏ¢×ª³Éwebsocket json
+				// 3.æŠŠfile serverçš„ä¸Šä¼ ä¿¡æ¯è½¬æˆwebsocket json
 				Json::Value responseData{ Json::objectValue };
 				responseData["file_id"] =
 					fileResponse.file_id();
@@ -307,4 +308,5 @@ void SetAvatarHandler::Handler(const Json::Value& json, std::shared_ptr<Connecti
 			}
 		}
 	);
+
 }

@@ -533,7 +533,7 @@ RegisterUserDbResult MysqlDao::RegisterUser(
     {
         std::unique_ptr<sql::PreparedStatement> statement(
             connection->prepareStatement(
-                "INSERT INTO users(name, email, pwd) "
+                "INSERT INTO users(name, email, password_hash) "
                 "VALUES (?, ?, ?)"
             )
         );
@@ -598,7 +598,7 @@ UserPasswordHashQueryResult MysqlDao::GetUserPasswordHash(const std::string& ema
     {
         std::unique_ptr<sql::PreparedStatement> statement(
             connection->prepareStatement(
-                "SELECT pwd "
+                "SELECT password_hash "
                 "FROM users "
                 "WHERE email = ? "
                 "LIMIT 1"
@@ -617,7 +617,10 @@ UserPasswordHashQueryResult MysqlDao::GetUserPasswordHash(const std::string& ema
             return {RegisterUserDbResult::UserNotFound, ""};
         }
 
-        return {RegisterUserDbResult::Success, result->getString("pwd").asStdString()};
+        return {
+            RegisterUserDbResult::Success,
+            result->getString("password_hash").asStdString()
+        };
     }
     catch (const sql::SQLException& exception)
     {

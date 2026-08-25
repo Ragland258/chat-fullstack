@@ -166,6 +166,7 @@
     <ClInclude Include="mysql\MysqlDao.h" />
     <ClInclude Include="mysql\MysqlMgr.h" />
     <ClInclude Include="redis\RedisMgr.h" />
+    <ClInclude Include="redis\RedisFileMgr.h" />
     <ClInclude Include="route\LogicRoute.h" />
     <ClInclude Include="handler\RequestHandler.h" />
     <ClInclude Include="handler\soloChatHandler.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="mysql\MysqlDao.cpp" />
     <ClCompile Include="mysql\MysqlMgr.cpp" />
     <ClCompile Include="redis\RedisMgr.cpp" />
+    <ClCompile Include="redis\RedisFileMgr.cpp" />
     <ClCompile Include="route\LogicRoute.cpp" />
     <ClCompile Include="handler\soloChatHandler.cpp" />
     <ClCompile Include="main.cpp" />
