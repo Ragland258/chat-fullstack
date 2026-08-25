@@ -52,4 +52,11 @@ enum class ErrorCode
 
 	//redis
 
+	// grpc
+	File_Rpc_Error = 4001,
+	File_Request_Error =4002,
+
+	//User
+	Unaauthorized = 5001,
+
 };

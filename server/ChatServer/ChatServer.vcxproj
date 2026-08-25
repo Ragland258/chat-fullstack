@@ -158,6 +158,7 @@
     <ClInclude Include="grpc\RpcPool.h" />
     <ClInclude Include="handler\Message.h" />
     <ClInclude Include="handler\SearchHandler.h" />
+    <ClInclude Include="handler\SetAvatarHandler.h" />
     <ClInclude Include="ioLoop\Connection.h" />
     <ClInclude Include="ioLoop\ConnectionMgr.h" />
     <ClInclude Include="ioLoop\WebSocketServer.h" />
@@ -180,6 +181,7 @@
     <ClCompile Include="handler\Message.cpp" />
     <ClCompile Include="handler\RequestHandler.cpp" />
     <ClCompile Include="handler\SearchHandler.cpp" />
+    <ClCompile Include="handler\SetAvatarHandler.cpp" />
     <ClCompile Include="ioLoop\Connection.cpp" />
     <ClCompile Include="ioLoop\ConnectionMgr.cpp" />
     <ClCompile Include="ioLoop\WebSocketServer.cpp" />

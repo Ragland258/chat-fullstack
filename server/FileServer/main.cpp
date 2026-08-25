@@ -1,14 +1,8 @@
 #include "ConfigMgr.h"
-#include "RpcServre.h"
-
+#include "grpc/RpcServre.h"
 #include <grpcpp/grpcpp.h>
 
-#include <cstdlib>
-#include <exception>
-#include <iostream>
-#include <memory>
-#include <stdexcept>
-#include <string>
+#include "const.h"
 
 int main()
 {

@@ -1,10 +1,10 @@
-#include "LogicRoute.h"
+﻿#include "LogicRoute.h"
 
 #include "ioLoop/Connection.h"
 #include "handler/RequestHandler.h"
 #include "handler/soloChatHandler.h"
 #include "handler/SearchHandler.h"
-
+#include "handler/SetAvatarHandler.h"
 LogicRoute::~LogicRoute()
 {
 }
@@ -103,11 +103,15 @@ LogicRoute::LogicRoute()
 		std::make_unique<soloChatHandler>()
 	);
 
-
-
 	// 查找用户
 	RegisterHandler(
 		"searchUser",
 		std::make_unique<SearchHandler>()
+	);
+
+	// 设置头像
+	RegisterHandler(
+		"setAvatar",
+		std::make_unique<SetAvatarHandler>()
 	);
 }

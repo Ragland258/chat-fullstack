@@ -87,6 +87,9 @@
     </ClCompile>
     <ClCompile Include="generate\server.grpc.pb.cc" />
     <ClCompile Include="generate\server.pb.cc" />
+    <ClCompile Include="handler\SetAvatarHandler.cpp">
+      <Filter>handler</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="const.h">
@@ -148,6 +151,9 @@
     </ClInclude>
     <ClInclude Include="generate\server.grpc.pb.h" />
     <ClInclude Include="generate\server.pb.h" />
+    <ClInclude Include="handler\SetAvatarHandler.h">
+      <Filter>handler</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ChatServer.rc">
