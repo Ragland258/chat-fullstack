@@ -203,9 +203,102 @@ grpc::Status RpcServreImpl::InitUpload(
 	return Status::OK;
 }
 
-Status RpcServreImpl::CompleteUpload(ServerContext* context, const CompleteUploadReq* request, CompleteUploadRsp* response)
+Status RpcServreImpl::CompleteUpload(ServerContext* context,
+	const CompleteUploadReq* request, 
+	CompleteUploadRsp* response)
 {
-	return Status();
+	// 1. 检测id
+	if (request->uploader_id() == 0 ||
+		request->file_id().empty())
+	{
+		FillResult(
+			response->mutable_result(),
+			FILE_RESULT_INVALID_REQUEST,
+			"upload_id and file_id are required"
+		);
+
+		return Status::OK;
+	}
+	
+	// 2.检测对象键是否属于当前上传者
+	const string expectedPrefix =
+		"avatar/" +
+		std::to_string(request->uploader_id()) +
+		"/";
+
+	if (!request->file_id().starts_with(
+		expectedPrefix))
+	{
+		FillResult(
+			response->mutable_result(),
+			FileResultCode::
+				FILE_RESULT_UNAUTHORIZED,
+			"file id not belong to uploader"
+		);
+		return Status::OK;
+
+	}
+
+	// 3.查询,根据完整object_key
+	const ObjectStatResult statResult =
+		minioMgr::GetInstance()->StatObject(
+			request->file_id()
+		);
+
+	// 4.区分对象不存在和minio自身错误
+	if (!statResult.success)
+	{
+		if (statResult.status_code == 404)
+		{
+			FillResult(
+				response->mutable_result(),
+				FileResultCode::
+				FILE_RESULT_NOT_FOUND,
+				"upload object not found"
+			);
+			return Status::OK;
+		}
+
+		FillResult(
+			response->mutable_result(),
+			FileResultCode::
+			FILE_RESULT_INTERNAL_ERROR,
+			"failed to query uploaded object"
+		);
+
+		return Status::OK;
+	}
+
+	// 5.把查询好的结果交给客户端
+	FileMetadata* file =
+		response->mutable_file();
+
+	file->set_file_id(
+		request->file_id()
+	);
+
+	file->set_uploader_id(
+		request->uploader_id()
+	);
+
+	file->set_content_type(
+		statResult.content_type
+	);
+
+	file->set_size_bytes(
+		statResult.size_bytes
+	);
+
+	file->set_status(
+		FileStatus::FILE_STATUS_READY
+	);
+
+	FillResult(
+		response->mutable_result(),
+		FileResultCode::FILE_RESULT_OK,
+		"upload object found"
+	);
+	return Status::OK;
 }
 
 Status RpcServreImpl::GetDownloadUrl(ServerContext* context, const GetDownloadUrlReq* request, GetDownloadUrlRsp* response)

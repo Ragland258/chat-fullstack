@@ -10,10 +10,11 @@
  * 1. grpc_status 表示连接、超时等传输层结果；
  * 2. response.result() 表示文件格式、大小等业务结果。
  */
-struct InitUploadRpcResult
+template<typename T>
+struct RpcResult
 {
     grpc::Status grpc_status;
-    fileserver::v1::InitUploadRsp response;
+    T response;
 
     // 这里只判断 RPC 是否成功到达 FileServer，不代表业务一定成功。
     [[nodiscard]]
@@ -44,8 +45,15 @@ public:
      * 调用 FileServer::InitUpload。
      * request 由 Handler 构造，响应中包含 file_id 和 upload_url。
      */
-    InitUploadRpcResult InitUpload(
-        const fileserver::v1::InitUploadReq& request);
+    RpcResult<fileserver::v1::InitUploadRsp>
+    InitUpload(
+        const fileserver::v1::InitUploadReq& request
+    );
+
+    RpcResult<fileserver::v1::CompleteUploadRsp>
+    CompUpload(
+        const fileserver::v1::CompleteUploadReq& request
+    );
 
 private:
     FileGrpcClient();

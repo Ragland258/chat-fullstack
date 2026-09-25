@@ -51,12 +51,23 @@ enum class ErrorCode
 	Mysql_Result_Error = 2012,
 
 	//redis
+	Redis_Error = 3001,
+	Conversation_Not_Exist = 3002,
 
-	// grpc
+	// FileServer 和文件上传业务
 	File_Rpc_Error = 4001,
-	File_Request_Error =4002,
+	File_Request_Error = 4002,
+
+	Upload_Session_Not_Found = 4003,
+	Upload_Session_Invalid = 4004,
+	Upload_Session_Expired = 4005,
+	Upload_Invalid_State = 4006,
+	Upload_Metadata_Mismatch = 4007,
 
 	//User
-	Unaauthorized = 5001,
+	Unauthorized = 5001,
+	UploaderId_Is_Mismatch = 5002,
+	SessionId_Is_Mismatch = 5003,
+
 
 };

@@ -7,7 +7,8 @@
 #include <stdexcept>
 #include <utility>
 
-InitUploadRpcResult FileGrpcClient::InitUpload(
+RpcResult<fileserver::v1::InitUploadRsp> 
+FileGrpcClient::InitUpload(
     const fileserver::v1::InitUploadReq& request)
 {
     fileserver::v1::InitUploadRsp response;
@@ -31,7 +32,7 @@ InitUploadRpcResult FileGrpcClient::InitUpload(
 
     if (!stub)
     {
-        return InitUploadRpcResult{
+        return {
             grpc::Status{
                 grpc::StatusCode::UNAVAILABLE,
                 "FileServer gRPC pool is stopped"
@@ -57,7 +58,63 @@ InitUploadRpcResult FileGrpcClient::InitUpload(
             << std::endl;
     }
 
-    return InitUploadRpcResult{
+    return {
+        std::move(status),
+        std::move(response)
+    };
+}
+
+RpcResult<fileserver::v1::CompleteUploadRsp>
+FileGrpcClient::CompUpload(const fileserver::v1::CompleteUploadReq& request)
+{
+    fileserver::v1::CompleteUploadRsp response;
+
+    /*
+     * ClientContext 保存单次调用的超时、元数据和取消状态。
+     * 它不能跨 RPC 复用，因此每次调用都要重新创建。
+     */
+    grpc::ClientContext context;
+
+    // 防止 FileServer 故障时永久占用 ChatServer 的工作线程。
+    context.set_deadline(
+        std::chrono::system_clock::now() +
+        std::chrono::seconds(2));
+
+    /*
+     * 从池中借出 FileService Stub。
+     * 函数退出时，RpcPoolGuard 会自动将它归还。
+     */
+    RpcPoolGuard<FileService> stub(pool_);
+
+    if (!stub)
+    {
+        return {
+            grpc::Status{
+                grpc::StatusCode::UNAVAILABLE,
+                "FileServer gRPC pool is stopped"
+            },
+            std::move(response)
+        };
+    }
+
+    // 同步等待 FileServer 返回；该函数应当在业务线程中调用。
+    grpc::Status status =
+        stub->CompleteUpload(
+            &context,
+            request,
+            &response);
+
+    if (!status.ok())
+    {
+        std::cerr
+            << "[File RPC] InitUpload failed, code: "
+            << status.error_code()
+            << ", message: "
+            << status.error_message()
+            << std::endl;
+    }
+
+    return {
         std::move(status),
         std::move(response)
     };

@@ -2,6 +2,40 @@
 #include "const.h"
 #include "Singleton.h"
 #include "MysqlDao.h"
+
+enum class UserRrofileFiled
+{
+    Avatar,
+    NikeName,
+    BackGround,
+    Signature,
+
+};
+
+struct UserProfilePatch
+{
+    std::optional<std::string> nickname;
+
+    std::optional<std::string> avatar_file_id;
+
+    std::optional<std::string> background_file_id;
+
+    std::optional<std::string> signature;
+
+    bool Empty() const noexcept
+    {
+        return !nickname.has_value() &&
+            !avatar_file_id.has_value() &&
+            !background_file_id.has_value() &&
+            !signature.has_value();
+    }
+};
+
+struct UserProfileUploadResiult
+{
+
+};
+
 class MysqlMgr : public Singleton<MysqlMgr>
 {
     friend class Singleton<MysqlMgr>;

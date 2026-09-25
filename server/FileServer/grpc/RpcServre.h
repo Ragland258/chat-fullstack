@@ -4,9 +4,6 @@
 #include "generate/server.grpc.pb.h"
 #include "const.h"
 
-#include <string>
-#include <string_view>
-
 using grpc::Server;
 using grpc::ServerBuilder;
 using grpc::ServerContext;

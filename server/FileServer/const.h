@@ -13,6 +13,7 @@
 #include <json/reader.h>
 
 #include <string>
+#include <string_view>
 #include <print>
 #include <vector>
 #include <queue>
